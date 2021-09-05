@@ -12,5 +12,7 @@
         public DateTime CreatedOn { get; set; }
 
         public DateTime ExpireOn { get; set; }
+
+        public string ErrorMessage { get; set; }
     }
 }

@@ -9,6 +9,8 @@
 
     public interface IUserAuthenticationRepository
     {
+        #region register
+
         [Sql("[dbo].[P_RegisterUser]")]
         Task<long> RegisterUserAsync(User User);
 
@@ -21,5 +23,16 @@
                 FROM  [dbo].[User]
         WHERE UserName = @userName")]
         int IsUserNameExists(string userName);
+
+        #endregion register
+
+        #region Login
+
+        [Sql(@"SELECT *
+              FROM [dbo].[User]
+              WHERE EmailAddress = @emailAddress")]
+        Task<User> GetUserDetailsAsync(string emailAddress);
+
+        #endregion Login
     }
 }

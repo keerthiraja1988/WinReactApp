@@ -85,7 +85,7 @@
         [MapToApiVersion("1.1")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> RegisterUserAsync_v1_0([FromBody] RegisterUserResourseModel registerUserRM)
+        public async Task<IActionResult> RegisterUserAsync_v1__([FromBody] RegisterUserResourseModel registerUserRM)
         {
             User user = new User();
 
@@ -108,26 +108,41 @@
             }
         }
 
-        //[HttpGet("IsEmailIdExists")]
-        //[AllowAnonymous]
-        //public async Task<IActionResult> IsEmailIdExistsAsync(string emailId)
-        //{
-        //    emailId = emailId.Trim().ToLower();
-
-        //    bool isEmailIdExists = false;
-
-        //    isEmailIdExists = await this._authenticationService.IsEmailIdExistsAsync(emailId);
-
-        //    if (isEmailIdExists)
-        //    {
-        //        return this.Json(false);
-        //    }
-        //    else
-        //    {
-        //        return this.Json(true);
-        //    }
-        //}
-
         #endregion register
+
+        #region LoginUser
+
+        [Route("LoginUser")]
+        [HttpPost]
+        [ValidateModel]
+        [AllowAnonymous]
+        [MapToApiVersion("1.0")]
+        [MapToApiVersion("1.1")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AuthTokenResourceModel))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> LoginUserAsync_v1__([FromBody] LoginUserResourseModel loginUserRM)
+        {
+            AuthTokenResourceModel authToken = new AuthTokenResourceModel();
+
+            var user = await this._userAuthenticationRepository.GetUserDetailsAsync(loginUserRM.EmailAddress.Trim());
+
+            if (user == null)
+            {
+                authToken.ErrorMessage = "Email Address or Password is incorrect. Please try again.";
+                return BadRequest(authToken);
+            }
+
+            var passwordHash = CryptographyExtensions.CreateHash(loginUserRM.Password, user.PasswordSalt);
+
+            if (passwordHash != user.PasswordHash)
+            {
+                authToken.ErrorMessage = "Email Address or Password is incorrect. Please try again.";
+                return BadRequest(authToken);
+            }
+
+            return Ok(authToken);
+        }
+
+        #endregion LoginUser
     }
 }
