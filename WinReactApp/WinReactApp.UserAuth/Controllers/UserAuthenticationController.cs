@@ -52,7 +52,9 @@ namespace WinReactApp.UserAuth.Controllers
             this._userAuthenticationRepository = userAuthenticationRepository;
         }
 
-        #region register
+        #region Authentication
+
+        #region Register User
 
         [Route("registeruser")]
         [HttpPost]
@@ -62,7 +64,7 @@ namespace WinReactApp.UserAuth.Controllers
         [MapToApiVersion("1.1")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> RegisterUserAsync_v1__([FromBody] RegisterUserResourseModel registerUserRM)
+        public async Task<IActionResult> RegisterUserAsync_v1_x([FromBody] RegisterUserResourseModel registerUserRM)
         {
             User user = new User();
 
@@ -85,9 +87,9 @@ namespace WinReactApp.UserAuth.Controllers
             }
         }
 
-        #endregion register
+        #endregion Register User
 
-        #region LoginUser
+        #region Login User
 
         [Route("LoginUser")]
         [HttpPost]
@@ -97,7 +99,7 @@ namespace WinReactApp.UserAuth.Controllers
         [MapToApiVersion("1.1")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AuthTokenResourceModel))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> LoginUserAsync_v1__([FromBody] LoginUserResourseModel loginUserRM)
+        public async Task<IActionResult> LoginUserAsync_v1_x([FromBody] LoginUserResourseModel loginUserRM)
         {
             AuthTokenResourceModel authToken = new AuthTokenResourceModel();
 
@@ -127,6 +129,8 @@ namespace WinReactApp.UserAuth.Controllers
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 };
 
+            authClaims.Add(new Claim(ClaimTypes.Role, "Administrator"));
+
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._configuration["JWT:Secret"]));
 
             var token = new JwtSecurityToken(
@@ -148,6 +152,43 @@ namespace WinReactApp.UserAuth.Controllers
             return this.Ok(authToken);
         }
 
-        #endregion LoginUser
+        #endregion Login User
+
+        #region Validate Authentication
+
+        [Route("ValidateAuthentication")]
+        [HttpGet]
+        [Authorize]
+        [MapToApiVersion("1.0")]
+        [MapToApiVersion("1.1")]
+        public IActionResult ValidateAuthentication_v1_x()
+        {
+            return this.Ok();
+        }
+
+        [Route("IsUserAdmin")]
+        [HttpGet]
+        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "User")]
+        [MapToApiVersion("1.0")]
+        [MapToApiVersion("1.1")]
+        public IActionResult IsUserAdministrator_v1_x()
+        {
+            return this.Ok();
+        }
+
+        [Route("IsUserAdmin1")]
+        [HttpGet]
+        [Authorize(Roles = "Administrator1")]
+        [MapToApiVersion("1.0")]
+        [MapToApiVersion("1.1")]
+        public IActionResult IsUserAdministrator1_v1_x()
+        {
+            return this.Ok();
+        }
+
+        #endregion Validate Authentication
+
+        #endregion Authentication
     }
 }
