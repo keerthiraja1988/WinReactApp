@@ -3,9 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinReactApp.UserAuth", "WinReactApp.UserAuth\WinReactApp.UserAuth.csproj", "{86D8B06C-1493-4E1D-89FE-0C9CFCB5A37C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "APIs", "APIs", "{FA841B42-066C-49F7-8D98-F19D53D51BF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinReactApp.ManageUsers", "WinReactApp.ManageUsers\WinReactApp.ManageUsers.csproj", "{17F81C4E-179B-4744-B3C9-F112A3675D36}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinReactApp.UserAuth", "APIs\WinReactApp.UserAuth\WinReactApp.UserAuth.csproj", "{C06EB149-0FCF-45B6-AF75-7820C504C882}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinReactApp.ManageUsers", "APIs\WinReactApp.ManageUsers\WinReactApp.ManageUsers.csproj", "{18435C25-7226-487D-AAEF-B13A930E7A15}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{2DC043B3-1387-4F74-9AAC-66242AECEB03}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinReactApp.ResourceModel", "Shared\WinReactApp.ResourceModel\WinReactApp.ResourceModel.csproj", "{8CEFE830-B59C-4B3F-ACB3-6839A8E6B26B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{50FE2E0B-0068-478F-BF60-75CC5CBCA44A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinReactApp.Blazor", "WinReactApp.Blazor\WinReactApp.Blazor.csproj", "{1D21AD71-11FD-44C3-B16F-7D463CFBE829}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,17 +23,31 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{86D8B06C-1493-4E1D-89FE-0C9CFCB5A37C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{86D8B06C-1493-4E1D-89FE-0C9CFCB5A37C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{86D8B06C-1493-4E1D-89FE-0C9CFCB5A37C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{86D8B06C-1493-4E1D-89FE-0C9CFCB5A37C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{17F81C4E-179B-4744-B3C9-F112A3675D36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{17F81C4E-179B-4744-B3C9-F112A3675D36}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{17F81C4E-179B-4744-B3C9-F112A3675D36}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{17F81C4E-179B-4744-B3C9-F112A3675D36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C06EB149-0FCF-45B6-AF75-7820C504C882}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C06EB149-0FCF-45B6-AF75-7820C504C882}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C06EB149-0FCF-45B6-AF75-7820C504C882}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C06EB149-0FCF-45B6-AF75-7820C504C882}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18435C25-7226-487D-AAEF-B13A930E7A15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18435C25-7226-487D-AAEF-B13A930E7A15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18435C25-7226-487D-AAEF-B13A930E7A15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18435C25-7226-487D-AAEF-B13A930E7A15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CEFE830-B59C-4B3F-ACB3-6839A8E6B26B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CEFE830-B59C-4B3F-ACB3-6839A8E6B26B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CEFE830-B59C-4B3F-ACB3-6839A8E6B26B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CEFE830-B59C-4B3F-ACB3-6839A8E6B26B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D21AD71-11FD-44C3-B16F-7D463CFBE829}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D21AD71-11FD-44C3-B16F-7D463CFBE829}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D21AD71-11FD-44C3-B16F-7D463CFBE829}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D21AD71-11FD-44C3-B16F-7D463CFBE829}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C06EB149-0FCF-45B6-AF75-7820C504C882} = {FA841B42-066C-49F7-8D98-F19D53D51BF4}
+		{18435C25-7226-487D-AAEF-B13A930E7A15} = {FA841B42-066C-49F7-8D98-F19D53D51BF4}
+		{8CEFE830-B59C-4B3F-ACB3-6839A8E6B26B} = {2DC043B3-1387-4F74-9AAC-66242AECEB03}
+		{1D21AD71-11FD-44C3-B16F-7D463CFBE829} = {50FE2E0B-0068-478F-BF60-75CC5CBCA44A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D77407AF-66C9-468C-BDAC-7A33E75A66A6}
