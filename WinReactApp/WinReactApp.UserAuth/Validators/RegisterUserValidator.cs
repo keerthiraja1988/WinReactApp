@@ -1,10 +1,16 @@
-﻿namespace WinReactApp.UserAuth.Validators
+﻿//-----------------------------------------------------------------------
+// <copyright file="RegisterUserValidator.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+// <author>Keerthi</author>
+//-----------------------------------------------------------------------
+namespace WinReactApp.UserAuth.Validators
 {
-    using FluentValidation;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using FluentValidation;
     using WinReactApp.UserAuth.Extensions.Custom;
     using WinReactApp.UserAuth.Repository;
     using WinReactApp.UserAuth.ResourseModel;
@@ -17,20 +23,20 @@
         {
             this._userAuthenticationRepository = userAuthenticationRepository;
 
-            RuleFor(x => x.UserName).NotNull().Length(6, 20)
-                  .Must(UserNameExist).WithMessage("User Name is already registered with us.");
-            RuleFor(x => x.EmailAddress).NotNull()
+            this.RuleFor(x => x.UserName).NotNull().Length(6, 20)
+                  .Must(this.UserNameExist).WithMessage("User Name is already registered with us.");
+            this.RuleFor(x => x.EmailAddress).NotNull()
                     .EmailAddress().WithMessage("Please provide valid Email Address.")
-                    .Must(EmailAddressExist).WithMessage("Email Address is already registered with us.");
-            RuleFor(x => x.FirstName).NotNull().Length(6, 20);
-            RuleFor(x => x.LastName).NotNull().Length(6, 20);
-            RuleFor(x => x.Password).NotNull().Length(8, 30).Must(x => CryptographyExtensions.HasValidPassword(x)).WithMessage(@"Your password does not meet the requirements!!
+                    .Must(this.EmailAddressExist).WithMessage("Email Address is already registered with us.");
+            this.RuleFor(x => x.FirstName).NotNull().Length(6, 20);
+            this.RuleFor(x => x.LastName).NotNull().Length(6, 20);
+            this.RuleFor(x => x.Password).NotNull().Length(8, 30).Must(x => CryptographyExtensions.HasValidPassword(x)).WithMessage(@"Your password does not meet the requirements!!
                            <br>Password should contains a lowercase.
                            <br>Should contains a uppercase.
                            <br>Should contains a number.
                            <br>Should contains a special character(eg. ! @ # $ % &");
 
-            RuleFor(x => x.ConfirmPassword)
+            this.RuleFor(x => x.ConfirmPassword)
                     .Equal(x => x.Password)
                     .WithMessage("Your Passwords do not match.");
         }

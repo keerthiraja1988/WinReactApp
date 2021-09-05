@@ -1,10 +1,14 @@
 namespace WinReactApp.UserAuth
 {
+    using System.Data.SqlClient;
+    using System.Reflection;
+    using System.Text;
     using AutoMapper;
     using FluentValidation.AspNetCore;
     using Insight.Database;
     using MicroElements.Swashbuckle.FluentValidation;
     using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
@@ -14,9 +18,8 @@ namespace WinReactApp.UserAuth
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Options;
+    using Microsoft.IdentityModel.Tokens;
     using Swashbuckle.AspNetCore.SwaggerGen;
-    using System.Data.SqlClient;
-    using System.Reflection;
     using WinReactApp.UserAuth.Extensions.AutoMapper;
     using WinReactApp.UserAuth.Extensions.Swagger;
     using WinReactApp.UserAuth.Repository;
@@ -25,7 +28,9 @@ namespace WinReactApp.UserAuth
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+              .AddJsonFile("appSettings.json");
+            this.Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -61,8 +66,8 @@ namespace WinReactApp.UserAuth
             services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
             services.AddSwaggerGen(options => options.OperationFilter<SwaggerDefaultValues>());
 
-            var _sqlConnection = new SqlConnection(sqlConnectionString);
-            services.AddTransient(b => _sqlConnection.AsParallel<IUserAuthenticationRepository>());
+            var sqlConnection = new SqlConnection(sqlConnectionString);
+            services.AddTransient(b => sqlConnection.AsParallel<IUserAuthenticationRepository>());
 
             services.AddControllers()
                   .AddJsonOptions(options =>
@@ -70,10 +75,31 @@ namespace WinReactApp.UserAuth
                       options.JsonSerializerOptions.PropertyNamingPolicy = null;
                   }).AddFluentValidation(options =>
                   {
-                      //options.RegisterValidatorsFromAssemblyContaining<Startup>();
                       options.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
                       options.ValidatorFactoryType = typeof(HttpContextServiceProviderValidatorFactory);
                   });
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+
+          // Adding Jwt Bearer
+          .AddJwtBearer(options =>
+          {
+              options.SaveToken = true;
+              options.RequireHttpsMetadata = false;
+              options.TokenValidationParameters = new TokenValidationParameters()
+              {
+                  ValidateIssuer = true,
+                  ValidateAudience = true,
+                  ValidAudience = this.Configuration["JWT:ValidAudience"],
+                  ValidIssuer = this.Configuration["JWT:ValidIssuer"],
+                  IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.Configuration["JWT:Secret"])),
+              };
+          });
 
             services.AddAutoMapper(typeof(AutoMapperProfile));
 
@@ -126,6 +152,7 @@ namespace WinReactApp.UserAuth
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseCors(builder => builder

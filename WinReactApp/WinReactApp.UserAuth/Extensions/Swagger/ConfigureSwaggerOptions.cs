@@ -1,4 +1,10 @@
-﻿namespace WinReactApp.UserAuth.Extensions.Swagger
+﻿//-----------------------------------------------------------------------
+// <copyright file="ConfigureSwaggerOptions.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+// <author>Keerthi</author>
+//-----------------------------------------------------------------------
+namespace WinReactApp.UserAuth.Extensions.Swagger
 {
     using Microsoft.AspNetCore.Mvc.ApiExplorer;
     using Microsoft.Extensions.DependencyInjection;
@@ -10,13 +16,13 @@
     {
         private readonly IApiVersionDescriptionProvider _provider;
 
-        public ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider) => _provider = provider;
+        public ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider) => this._provider = provider;
 
         public void Configure(SwaggerGenOptions options)
         {
             // add a swagger document for each discovered API version
             // note: you might choose to skip or document deprecated API versions differently
-            foreach (var description in _provider.ApiVersionDescriptions)
+            foreach (var description in this._provider.ApiVersionDescriptions)
             {
                 options.SwaggerDoc(description.GroupName, CreateInfoForApiVersion(description));
             }

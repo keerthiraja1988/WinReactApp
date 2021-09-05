@@ -1,8 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
-
+﻿//-----------------------------------------------------------------------
+// <copyright file="RegisterUserResourseModel.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+// <author>Keerthi</author>
+//-----------------------------------------------------------------------
 namespace WinReactApp.UserAuth.ResourseModel
 {
+    using System.ComponentModel.DataAnnotations;
+    using Microsoft.AspNetCore.Mvc;
+
     public class RegisterUserResourseModel
     {
         public string UserName { get; set; }

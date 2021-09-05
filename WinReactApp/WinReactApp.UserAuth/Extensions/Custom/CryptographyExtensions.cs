@@ -1,12 +1,18 @@
-﻿namespace WinReactApp.UserAuth.Extensions.Custom
+﻿//-----------------------------------------------------------------------
+// <copyright file="CryptographyExtensions.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+// <author>Keerthi</author>
+//-----------------------------------------------------------------------
+namespace WinReactApp.UserAuth.Extensions.Custom
 {
-    using Microsoft.AspNetCore.Cryptography.KeyDerivation;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
     public static class CryptographyExtensions
     {
@@ -32,7 +38,7 @@
             var digit = new Regex("(\\d)+");
             var symbol = new Regex("(\\W)+");
 
-            return (lowercase.IsMatch(pw) && uppercase.IsMatch(pw) && digit.IsMatch(pw) && symbol.IsMatch(pw));
+            return lowercase.IsMatch(pw) && uppercase.IsMatch(pw) && digit.IsMatch(pw) && symbol.IsMatch(pw);
         }
     }
 }

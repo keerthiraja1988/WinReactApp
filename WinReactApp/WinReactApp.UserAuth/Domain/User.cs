@@ -1,4 +1,10 @@
-﻿namespace WinReactApp.UserAuth.Domain
+﻿//-----------------------------------------------------------------------
+// <copyright file="User.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+// <author>Keerthi</author>
+//-----------------------------------------------------------------------
+namespace WinReactApp.UserAuth.Domain
 {
     using System;
     using System.Collections.Generic;

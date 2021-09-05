@@ -1,15 +1,18 @@
-﻿namespace WinReactApp.UserAuth.Extensions.AutoMapper
+﻿//-----------------------------------------------------------------------
+// <copyright file="AutoMapperProfile.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+// <author>Keerthi</author>
+//-----------------------------------------------------------------------
+namespace WinReactApp.UserAuth.Extensions.AutoMapper
 {
     using System;
-    using System.Linq;
-    using System.Threading.Tasks;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-
+    using System.Linq;
+    using System.Threading.Tasks;
     using global::AutoMapper;
-
     using WinReactApp.UserAuth.Domain;
-
     using WinReactApp.UserAuth.ResourseModel;
 
     [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1126:PrefixCallsCorrectly", Justification = "Reviewed.")]

@@ -1,4 +1,10 @@
-﻿namespace WinReactApp.UserAuth.Extensions.Custom
+﻿//-----------------------------------------------------------------------
+// <copyright file="StringExtensions.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+// <author>Keerthi</author>
+//-----------------------------------------------------------------------
+namespace WinReactApp.UserAuth.Extensions.Custom
 {
     using System;
     using System.Collections.Generic;

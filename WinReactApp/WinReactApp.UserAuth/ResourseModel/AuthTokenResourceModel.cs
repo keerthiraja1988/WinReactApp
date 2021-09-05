@@ -1,4 +1,10 @@
-﻿namespace WinReactApp.UserAuth.ResourseModel
+﻿//-----------------------------------------------------------------------
+// <copyright file="AuthTokenResourceModel.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+// <author>Keerthi</author>
+//-----------------------------------------------------------------------
+namespace WinReactApp.UserAuth.ResourseModel
 {
     using System;
     using System.Collections.Generic;
@@ -14,5 +20,13 @@
         public DateTime ExpireOn { get; set; }
 
         public string ErrorMessage { get; set; }
+
+        public string UserName { get; set; }
+
+        public string EmailAddress { get; set; }
+
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
     }
 }

@@ -1,7 +1,13 @@
-﻿namespace WinReactApp.UserAuth.ResourseModel
+﻿//-----------------------------------------------------------------------
+// <copyright file="LoginUserResourseModel.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+// <author>Keerthi</author>
+//-----------------------------------------------------------------------
+namespace WinReactApp.UserAuth.ResourseModel
 {
-    using Microsoft.AspNetCore.Mvc;
     using System.ComponentModel.DataAnnotations;
+    using Microsoft.AspNetCore.Mvc;
 
     public class LoginUserResourseModel
     {
