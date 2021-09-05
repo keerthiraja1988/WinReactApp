@@ -4,7 +4,7 @@
 // </copyright>
 // <author>Keerthi</author>
 //-----------------------------------------------------------------------
-namespace WinReactApp.UserAuth.Controllers
+namespace WinReactApp.ManageUsers.Controllers
 {
     using System;
     using System.Collections.Generic;
@@ -20,11 +20,11 @@ namespace WinReactApp.UserAuth.Controllers
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Microsoft.IdentityModel.Tokens;
-    using WinReactApp.UserAuth.Domain;
-    using WinReactApp.UserAuth.Extensions.Custom;
-    using WinReactApp.UserAuth.Extensions.Filters;
-    using WinReactApp.UserAuth.Repository;
-    using WinReactApp.UserAuth.ResourseModel;
+    using WinReactApp.ManageUsers.Domain;
+    using WinReactApp.ManageUsers.Extensions.Custom;
+    using WinReactApp.ManageUsers.Extensions.Filters;
+    using WinReactApp.ManageUsers.Repository;
+    using WinReactApp.ManageUsers.ResourseModel;
 
     [Produces("application/json")]
     [ApiController]
@@ -123,7 +123,6 @@ namespace WinReactApp.UserAuth.Controllers
 
             var authClaims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(ClaimTypes.Email, user.EmailAddress),
                     new Claim(ClaimTypes.Expiration, expire.ToString()),
