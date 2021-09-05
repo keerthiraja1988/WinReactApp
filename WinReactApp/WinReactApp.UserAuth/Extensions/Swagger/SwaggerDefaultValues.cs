@@ -1,4 +1,4 @@
-﻿namespace WinReactApp.UserAuth
+﻿namespace WinReactApp.UserAuth.Extensions.Swagger
 {
     using Microsoft.AspNetCore.Mvc.ApiExplorer;
     using Microsoft.OpenApi.Any;
