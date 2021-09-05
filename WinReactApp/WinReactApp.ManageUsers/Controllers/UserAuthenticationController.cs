@@ -56,6 +56,7 @@ namespace WinReactApp.ManageUsers.Controllers
         [Authorize]
         [MapToApiVersion("1.0")]
         [MapToApiVersion("1.1")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult ValidateAuthentication_v1_x()
         {
             return this.Ok();
@@ -67,6 +68,8 @@ namespace WinReactApp.ManageUsers.Controllers
         [Authorize(Roles = "User")]
         [MapToApiVersion("1.0")]
         [MapToApiVersion("1.1")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public IActionResult IsUserAdministrator_v1_x()
         {
             return this.Ok();
@@ -77,6 +80,8 @@ namespace WinReactApp.ManageUsers.Controllers
         [Authorize(Roles = "Administrator1")]
         [MapToApiVersion("1.0")]
         [MapToApiVersion("1.1")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public IActionResult IsUserAdministrator1_v1_x()
         {
             return this.Ok();
