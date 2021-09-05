@@ -8,13 +8,20 @@
     using WinReactApp.ManageUsers.Models;
     using WinReactApp.ManageUsers.ResourseModel;
 
-    public class AddAddressValidator : AbstractValidator<AddAddressResourseModel>
+    public class UpdateAddressValidator : AbstractValidator<UpdateAddressResourseModel>
     {
         private readonly DBContext _context;
 
-        public AddAddressValidator(DBContext context)
+        public UpdateAddressValidator(DBContext context)
         {
             this._context = context;
+
+            this.RuleFor(x => x.UserAddressId).Cascade(CascadeMode.Stop)
+                     .NotNull().WithMessage("Invalid User Address Id.")
+                     .Must(x => x > 0 && x < long.MaxValue).WithMessage("User Address Id should between 0 to " + long.MaxValue)
+                      .Must((fooArgs, userAddressId) =>
+                        this.UserAddressIdExistsForUserId(fooArgs.UserId, fooArgs.UserAddressId))
+                        .WithMessage("User Address Id not found for User Id.");
 
             this.RuleFor(x => x.UserId).Cascade(CascadeMode.Stop)
                      .NotNull().WithMessage("Invalid User Id.")
@@ -24,18 +31,20 @@
             this.RuleFor(x => x.AddressTypeId).Cascade(CascadeMode.Stop)
                          .NotNull().WithMessage("Please provide valid Address Type Id.")
                          .Must(x => x > 0 && x < int.MaxValue).WithMessage("Address Type Id should between 0 to " + int.MaxValue)
-                         .Must(this.AddressTypeExists).WithMessage("Address Type Id not found.");
+                         .Must(this.AddressTypeExists).WithMessage("Address Type Id not found.")
+                         .DependentRules(() =>
+                         {
+                             this.RuleFor(x => x.AddressName).Cascade(CascadeMode.Stop)
+                                 .NotNull().Length(6, 30)
+                                 .Must((fooArgs, userId, userAddressId) =>
+                                        this.AddressNameExists(fooArgs.AddressName, fooArgs.UserId, fooArgs.UserAddressId))
+                                        .WithMessage("Address Name already exists for the user.");
+                         });
 
             this.RuleFor(x => x.CountryId).Cascade(CascadeMode.Stop)
                   .NotNull().WithMessage("Please provide valid Country Id.")
                   .Must(x => x > 0 && x < int.MaxValue).WithMessage("Country Id should between 0 to " + int.MaxValue)
                   .Must(this.CountryExists).WithMessage("Country Id not found.");
-
-            this.RuleFor(x => x.AddressName).Cascade(CascadeMode.Stop)
-                 .NotNull().Length(6, 30)
-                 .Must((fooArgs, addressName) =>
-                 this.AddressNameExists(fooArgs.AddressName, fooArgs.UserId))
-                 .WithMessage("Address Name already exists for the user.");
 
             this.RuleFor(x => x.MobileNumber).NotNull().Length(9, 30);
 
@@ -54,9 +63,25 @@
             this.RuleFor(x => x.StateName).NotNull().Length(4, 35);
         }
 
-        private bool AddressNameExists(string addressName, long userId)
+        private bool UserAddressIdExistsForUserId(long userId, long userAddressId)
         {
-            if (this._context.UserAddresses.Any(x => x.AddressName == addressName && x.UserId == userId && x.IsActive == true))
+            if (this._context.UserAddresses.Any(x => x.UserAddressId == userAddressId && x.UserId == userId && x.IsActive == true))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private bool AddressNameExists(string addressName, long userId, long userAddressId)
+        {
+            if (this._context.UserAddresses.Any(x => x.AddressName == addressName
+                                                    && x.UserId == userId
+                                                    && x.UserAddressId != userAddressId
+                                                    && x.AddressName == addressName
+                                                    && x.IsActive == true))
             {
                 return false;
             }

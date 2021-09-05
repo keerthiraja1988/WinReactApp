@@ -24,15 +24,10 @@ namespace WinReactApp.ManageUsers.Extensions.AutoMapper
         {
             AllowNullDestinationValues = true;
 
-            #region Authentication
-
-            CreateMap<RegisterUserResourseModel, User>().ReverseMap();
-
-            #endregion Authentication
-
             #region Address
 
             CreateMap<AddAddressResourseModel, UserAddress>().ReverseMap();
+            CreateMap<UpdateAddressResourseModel, UserAddress>().ReverseMap();
 
             #endregion Address
         }

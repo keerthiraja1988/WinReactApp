@@ -14,6 +14,7 @@ namespace WinReactApp.UserAuth.Controllers
     using System.Text;
     using System.Threading.Tasks;
     using AutoMapper;
+    using FluentValidation.Results;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -63,7 +64,7 @@ namespace WinReactApp.UserAuth.Controllers
         [MapToApiVersion("1.0")]
         [MapToApiVersion("1.1")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationResult))]
         public async Task<IActionResult> RegisterUserAsync_v1_x([FromBody] RegisterUserResourseModel registerUserRM)
         {
             User user = new User();
@@ -98,7 +99,7 @@ namespace WinReactApp.UserAuth.Controllers
         [MapToApiVersion("1.0")]
         [MapToApiVersion("1.1")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AuthTokenResourceModel))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationResult))]
         public async Task<IActionResult> LoginUserAsync_v1_x([FromBody] LoginUserResourseModel loginUserRM)
         {
             AuthTokenResourceModel authToken = new AuthTokenResourceModel();
@@ -162,6 +163,7 @@ namespace WinReactApp.UserAuth.Controllers
         [Authorize]
         [MapToApiVersion("1.0")]
         [MapToApiVersion("1.1")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult ValidateAuthentication_v1_x()
         {
             return this.Ok();
@@ -173,6 +175,8 @@ namespace WinReactApp.UserAuth.Controllers
         [Authorize(Roles = "User")]
         [MapToApiVersion("1.0")]
         [MapToApiVersion("1.1")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public IActionResult IsUserAdministrator_v1_x()
         {
             return this.Ok();
@@ -183,6 +187,8 @@ namespace WinReactApp.UserAuth.Controllers
         [Authorize(Roles = "Administrator1")]
         [MapToApiVersion("1.0")]
         [MapToApiVersion("1.1")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public IActionResult IsUserAdministrator1_v1_x()
         {
             return this.Ok();
