@@ -11,13 +11,13 @@ namespace WinReactApp.ManageUsers.ResourseModel
 
     public class AddAddressResourseModel
     {
-        public long? UserId { get; set; }
+        public long UserId { get; set; }
 
-        public int? AddressTypeId { get; set; }
+        public int AddressTypeId { get; set; }
 
-        public int? CountryId { get; set; }
+        public int CountryId { get; set; }
 
-        public string FullName { get; set; }
+        public string AddressName { get; set; }
 
         public string MobileNumber { get; set; }
 

@@ -7,10 +7,10 @@ using System.Collections.Generic;
 
 namespace WinReactApp.ManageUsers.Models
 {
-    public partial class Country
+    public partial class AddressType
     {
-        public long CountryId { get; set; }
-        public string CountryName { get; set; }
+        public long AddressTypeId { get; set; }
+        public string AddressType1 { get; set; }
         public bool? IsActive { get; set; }
     }
 }
