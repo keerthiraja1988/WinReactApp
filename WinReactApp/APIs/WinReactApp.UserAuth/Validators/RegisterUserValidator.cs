@@ -35,7 +35,7 @@ namespace WinReactApp.UserAuth.Validators
 
             this.RuleFor(x => x.FirstName).NotNull().Length(6, 20);
             this.RuleFor(x => x.LastName).NotNull().Length(6, 20);
-            this.RuleFor(x => x.Password)
+            this.RuleFor(x => x.Password).Cascade(CascadeMode.Stop)
                             .NotNull()
                             .Length(8, 30)
                             .Must(this.PasswordHasLowercase).WithMessage("Password should contains a lowercase.")

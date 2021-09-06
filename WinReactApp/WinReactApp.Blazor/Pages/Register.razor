@@ -1,20 +1,56 @@
 ﻿@page "/register"
+@using WinReactApp.ResourceModel.UserAuth
+@using WinReactApp.Blazor.Extensions
+@using System.Text
+@using Newtonsoft.Json
 
 <h1>User Registration</h1>
 
-<form>
+<EditForm Model="RegisterUserRM" OnValidSubmit="HandleValidSubmit">
+    @*<ServerValidator @ref="serverValidator" />*@  
+
     <div class="form-group">
-        <label for="exampleInputEmail1">Email address</label>
-        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        <label>Name</label>
+        <ValidationMessage For="@(() => RegisterUserRM.UserName)" />
+        <InputText class="form-control" @bind-Value="RegisterUserRM.UserName" />
     </div>
     <div class="form-group">
-        <label for="exampleInputPassword1">Password</label>
-        <input type="password" class="form-control" id="exampleInputPassword1">
+        <label>Start Location</label>
+        <ValidationMessage For="@(() => RegisterUserRM.EmailAddress)" />
+        <InputText class="form-control" @bind-Value="RegisterUserRM.EmailAddress" />
     </div>
-    <div class="form-group form-check">
-        <input type="checkbox" class="form-check-input" id="exampleCheck1">
-        <label class="form-check-label" for="exampleCheck1">Check me out</label>
+    <div class="form-group">
+        <label>End Location</label>
+        <ValidationMessage For="@(() => RegisterUserRM.FirstName)" />
+        <InputText class="form-control" @bind-Value="RegisterUserRM.FirstName" />
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Click</button>
+    </div>
+</EditForm>
+
+@code {
+    public RegisterUserResourseModel RegisterUserRM = new RegisterUserResourseModel();
+    private ServerValidator serverValidator;
+
+    public async Task HandleValidSubmit()
+    {
+        using (var httpClient = new HttpClient())
+        {
+            StringContent content = new StringContent(JsonConvert.SerializeObject(RegisterUserRM), Encoding.UTF8, "application/json");
+
+            using (var response = await httpClient.PostAsync("https://localhost:44374/api/UserAuth/registeruser?api-version=1.0", content))
+            {
+                if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    serverValidator.Validate(response, content);
+                }
+                else
+                {
+                    //Navigation.NavigateTo(response.Headers.Location.ToString());
+                }
+            }
+        }
+    }
+
+}
