@@ -11,11 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinReactApp.ManageUsers", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{2DC043B3-1387-4F74-9AAC-66242AECEB03}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinReactApp.ResourceModel", "Shared\WinReactApp.ResourceModel\WinReactApp.ResourceModel.csproj", "{8CEFE830-B59C-4B3F-ACB3-6839A8E6B26B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinReactApp.ResourceModel", "Shared\WinReactApp.ResourceModel\WinReactApp.ResourceModel.csproj", "{8CEFE830-B59C-4B3F-ACB3-6839A8E6B26B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{50FE2E0B-0068-478F-BF60-75CC5CBCA44A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinReactApp.Blazor", "WinReactApp.Blazor\WinReactApp.Blazor.csproj", "{1D21AD71-11FD-44C3-B16F-7D463CFBE829}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinReactApp.Blazor", "WinReactApp.Blazor\WinReactApp.Blazor.csproj", "{1D21AD71-11FD-44C3-B16F-7D463CFBE829}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

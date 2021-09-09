@@ -1,30 +1,52 @@
-﻿@page "/register"
+﻿@page "/register1"
 @using WinReactApp.ResourceModel.UserAuth
 @using WinReactApp.Blazor.Extensions
 @using System.Text
 @using Newtonsoft.Json
 
+@inject IJSRuntime js
 <h1>User Registration</h1>
 
-<EditForm Model="RegisterUserRM" OnValidSubmit="HandleValidSubmit">
-    @*<ServerValidator @ref="serverValidator" />*@  
+<EditForm Model="RegisterUserRM" OnSubmit="HandleValidSubmit">
 
-    <div class="form-group">
-        <label>Name</label>
+    <div class="form-group mb-3">
+        <label>User Name</label>
         <ValidationMessage For="@(() => RegisterUserRM.UserName)" />
         <InputText class="form-control" @bind-Value="RegisterUserRM.UserName" />
     </div>
-    <div class="form-group">
-        <label>Start Location</label>
+
+    <div class="form-group mb-3">
+        <label>Email Address</label>
         <ValidationMessage For="@(() => RegisterUserRM.EmailAddress)" />
         <InputText class="form-control" @bind-Value="RegisterUserRM.EmailAddress" />
     </div>
-    <div class="form-group">
-        <label>End Location</label>
+
+    <div class="form-group mb-3">
+        <label>First Name</label>
         <ValidationMessage For="@(() => RegisterUserRM.FirstName)" />
         <InputText class="form-control" @bind-Value="RegisterUserRM.FirstName" />
     </div>
-    <div class="form-group">
+    <div class="form-group mb-3">
+        <label>Last Name</label>
+        <InputText class="form-control" @bind-Value="RegisterUserRM.LastName" />
+        <ValidationMessage For="@(() => RegisterUserRM.LastName)" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Passworde</label>
+        <InputText class="form-control" @bind-Value="RegisterUserRM.Password" />
+        <ValidationMessage For="@(() => RegisterUserRM.Password)" />
+    </div>
+    <div class="form-group mb-3">
+        <label>Confirm Password</label>
+        <InputText class="form-control" @bind-Value="RegisterUserRM.ConfirmPassword" />
+        <ValidationMessage For="@(() => RegisterUserRM.ConfirmPassword)" />
+    </div>
+
+    <ServerValidator @ref="serverValidator" />
+    <ValidationSummary color="red" />
+
+    <div class="form-group mb-3">
         <button type="submit" class="btn btn-primary">Click</button>
     </div>
 </EditForm>
@@ -35,6 +57,9 @@
 
     public async Task HandleValidSubmit()
     {
+
+        await js.InvokeVoidAsync("ClearValidationSummary");
+
         using (var httpClient = new HttpClient())
         {
             StringContent content = new StringContent(JsonConvert.SerializeObject(RegisterUserRM), Encoding.UTF8, "application/json");

@@ -9,6 +9,8 @@ namespace WinReactApp.Blazor
     using System.Net.Http;
     using System.Text;
     using System.Threading.Tasks;
+    using WinReactApp.Blazor.Clients;
+    using WinReactApp.Blazor.Service;
 
     public class Program
     {
@@ -17,7 +19,12 @@ namespace WinReactApp.Blazor
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddSingleton<SharedService>();
+
+            builder.Services.AddHttpClient<UserAuthenticationClient>(client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:44374/api/");
+            });
 
             await builder.Build().RunAsync();
         }
