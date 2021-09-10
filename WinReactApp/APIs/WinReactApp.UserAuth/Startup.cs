@@ -114,12 +114,6 @@ namespace WinReactApp.UserAuth
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
         {
-            app.Use(async (context, next) =>
-            {
-                // Call the next delegate/middleware in the pipeline
-                await next();
-            });
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -177,8 +171,6 @@ namespace WinReactApp.UserAuth
                     });
                 }
             }));
-
-            //app.UseExceptionHandler("/error"); // Add this
 
             app.UseEndpoints(endpoints =>
             {
