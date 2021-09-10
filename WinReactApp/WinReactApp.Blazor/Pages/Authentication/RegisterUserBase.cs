@@ -35,6 +35,7 @@
 
         public async Task HandleValidSubmit()
         {
+            await this._jsRuntime.InvokeVoidAsync("sharedController.clearValidationSummary");
             StringContent content = new StringContent(JsonConvert.SerializeObject(RegisterUserRM), Encoding.UTF8, "application/json");
 
             var response = await this._userAuthenticationClient.RegisterUserAsync(content);
