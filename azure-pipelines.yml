@@ -1,0 +1,62 @@
+# Variable 'ASPNETCORE_ENVIRONMENT' was defined in the Variables tab
+variables:
+- name: BuildParameters.RestoreBuildProjects
+  value: '**/WinReactApp.UserAuth.csproj'
+- name: BuildParameters.TestProjects
+  value: '**/*[Tt]ests/*.csproj'
+trigger:
+  branches:
+    include:
+    - Dev
+name: $(date:yyyyMMdd)$(rev:.r)
+resources:
+  repositories:
+  - repository: self
+    type: git
+    ref: Dev
+jobs:
+- job: Job_1
+  displayName: Agent job 1
+  pool:
+    vmImage: windows-2019
+  steps:
+  - checkout: self
+    clean: true
+  - task: DotNetCoreCLI@2
+    displayName: Restore
+    inputs:
+      command: restore
+      projects: $(BuildParameters.RestoreBuildProjects)
+  - task: DotNetCoreCLI@2
+    displayName: Build
+    inputs:
+      projects: $(BuildParameters.RestoreBuildProjects)
+      arguments: --configuration $(BuildConfiguration)
+  - task: FileTransform@1
+    displayName: 'File Transform: '
+    inputs:
+      folderPath: WinReactApp/APIs/WinReactApp.UserAuth
+      fileType: json
+      targetFiles: enviromentSettings.json
+  - task: DotNetCoreCLI@2
+    displayName: Test
+    enabled: False
+    inputs:
+      command: test
+      projects: $(BuildParameters.TestProjects)
+      arguments: --configuration $(BuildConfiguration)
+  - task: DotNetCoreCLI@2
+    displayName: Publish
+    inputs:
+      command: publish
+      publishWebProjects: false
+      projects: $(BuildParameters.RestoreBuildProjects)
+      arguments: --configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory) --runtime win-x64
+      zipAfterPublish: false
+  - task: PublishBuildArtifacts@1
+    displayName: Publish Artifact
+    condition: succeededOrFailed()
+    inputs:
+      PathtoPublish: $(build.artifactstagingdirectory)
+      TargetPath: '\\my\share\$(Build.DefinitionName)\$(Build.BuildNumber)'
+...
