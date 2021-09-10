@@ -57,7 +57,7 @@ namespace WinReactApp.Blazor
             }
             else
             {
-                appSettingsFile = "appsettings" + ASPNETCORE_ENVIRONMENT + ".json";
+                appSettingsFile = "appsettings." + ASPNETCORE_ENVIRONMENT + ".json";
             }
 
             Console.WriteLine(ASPNETCORE_ENVIRONMENT);
