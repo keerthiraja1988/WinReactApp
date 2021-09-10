@@ -43,7 +43,27 @@ namespace WinReactApp.Blazor
 
         public static async Task ConfigureServices(WebAssemblyHostBuilder builder, HttpClient http)
         {
-            using var response = await http.GetAsync("appsettings.json");
+            using var enviromentResponse = await http.GetAsync("enviromentSettings.json");
+            string enviromentStream = await enviromentResponse.Content.ReadAsStringAsync();
+            var envSettings = JObject.Parse(enviromentStream);
+
+            var ASPNETCORE_ENVIRONMENT = envSettings["ASPNETCORE_ENVIRONMENT"].ToString();
+
+            string appSettingsFile = string.Empty;
+
+            if (ASPNETCORE_ENVIRONMENT == "Debug")
+            {
+                appSettingsFile = "appsettings.json";
+            }
+            else
+            {
+                appSettingsFile = "appsettings" + ASPNETCORE_ENVIRONMENT + ".json";
+            }
+
+            Console.WriteLine(ASPNETCORE_ENVIRONMENT);
+            Console.WriteLine(appSettingsFile);
+
+            using var response = await http.GetAsync(appSettingsFile);
             using var stream = await response.Content.ReadAsStreamAsync();
 
             builder.Configuration.AddJsonStream(stream);
