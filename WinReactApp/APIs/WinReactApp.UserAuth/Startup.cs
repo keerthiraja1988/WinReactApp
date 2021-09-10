@@ -28,9 +28,7 @@ namespace WinReactApp.UserAuth
     {
         public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-              .AddJsonFile("appSettings.json");
-            this.Configuration = builder.Build();
+            this.Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -60,7 +58,7 @@ namespace WinReactApp.UserAuth
                 options.SubstituteApiVersionInUrl = true;
             });
 
-            string sqlConnectionString = "Data Source=.;Initial Catalog=WinReactApp.UserAuth;Integrated Security=True;Persist Security Info=true;";
+            string sqlConnectionString = this.Configuration["DatabaseSetting:SqlDbConnection"];
 
             services.AddHttpContextAccessor();
             services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();

@@ -1,0 +1,13 @@
+{
+  // Possible string values reported below. When empty it use ENV variable value or Visual Studio setting.
+
+  // Setting up ASPNETCORE_ENVIRONMENT in Control Panel >> ENVIRONMENT variable is risky in shared IIS server
+  // ASPNETCORE_ENVIRONMENT variable is given here.
+  // Do not follow as per microsoft tutorial (Use multiple environments in ASP.NET Core) https://docs.microsoft.com/en-us/aspnet/core/fundamentals/environments?view=aspnetcore-3.0
+
+  // - Debug
+  // - Development
+  // - UAT
+  // - Production
+  "ASPNETCORE_ENVIRONMENT": "Debug"
+}
