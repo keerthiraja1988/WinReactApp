@@ -10,7 +10,9 @@ namespace WinReactApp.UserAuth
     using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Diagnostics;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.ApiExplorer;
     using Microsoft.AspNetCore.Mvc.Versioning;
@@ -19,8 +21,10 @@ namespace WinReactApp.UserAuth
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Options;
     using Microsoft.IdentityModel.Tokens;
+    using NLog.Extensions.Logging;
     using Swashbuckle.AspNetCore.SwaggerGen;
     using WinReactApp.UserAuth.Extensions.AutoMapper;
+    using WinReactApp.UserAuth.Extensions.Filters;
     using WinReactApp.UserAuth.Extensions.Swagger;
     using WinReactApp.UserAuth.Repository;
 
@@ -67,7 +71,10 @@ namespace WinReactApp.UserAuth
             var sqlConnection = new SqlConnection(sqlConnectionString);
             services.AddTransient(b => sqlConnection.AsParallel<IUserAuthenticationRepository>());
 
-            services.AddControllers()
+            services.AddControllers(options =>
+            {
+                options.Filters.Add(typeof(LoggingActionFilter));
+            })
                   .AddJsonOptions(options =>
                   {
                       options.JsonSerializerOptions.PropertyNamingPolicy = null;
@@ -109,23 +116,6 @@ namespace WinReactApp.UserAuth
         {
             app.Use(async (context, next) =>
             {
-                string apiVersion = context.Request.Query["api-version"];
-
-                if (!string.IsNullOrEmpty(apiVersion))
-                {
-                    context.Response.Headers.Add("X-Api-Version", apiVersion);
-                }
-                else
-                {
-                    context.Response.Headers.Add("X-Api-Version", "1.1");
-                }
-
-                context.Response.Headers.Add("X-Default-Api-Version", "1.1");
-                context.Response.Headers.Add("X-Request-Id", context.TraceIdentifier);
-                context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
-                context.Response.Headers.Add("X-Frame-Options", "DENY");
-                context.Response.Headers.Add("X-XSS-Protection", "1; mode=block");
-
                 // Call the next delegate/middleware in the pipeline
                 await next();
             });
@@ -157,6 +147,38 @@ namespace WinReactApp.UserAuth
                         .AllowAnyOrigin()
                         .AllowAnyMethod()
                         .AllowAnyHeader());
+
+            app.UseExceptionHandler(a => a.Run(async context =>
+            {
+                context.Response.Headers.Add("X-Request-Id", context.TraceIdentifier);
+
+                var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+                var exception = exceptionHandlerPathFeature.Error;
+
+                if (env.IsDevelopment())
+                {
+                    await context.Response.WriteAsJsonAsync(new
+                    {
+                        Error = "An error occured while processing your request.",
+                        IsError = true,
+                        StatusCode = 500,
+                        StackTrace = exception.StackTrace,
+                        Message = exception.Message,
+                        InnerException = exception.InnerException,
+                    });
+                }
+                else
+                {
+                    await context.Response.WriteAsJsonAsync(new
+                    {
+                        Error = "An error occured while processing your request.",
+                        IsError = true,
+                        StatusCode = 500,
+                    });
+                }
+            }));
+
+            //app.UseExceptionHandler("/error"); // Add this
 
             app.UseEndpoints(endpoints =>
             {

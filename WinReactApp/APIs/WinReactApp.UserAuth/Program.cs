@@ -16,6 +16,9 @@ namespace WinReactApp.UserAuth
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json.Linq;
+    using NLog;
+    using NLog.Extensions.Logging;
+    using NLog.Web;
 
     public class Program
     {
@@ -31,14 +34,36 @@ namespace WinReactApp.UserAuth
             var envSettings = JObject.Parse(File.ReadAllText(envSettingsPath));
             ASPNETCORE_ENVIRONMENT = envSettings["ASPNETCORE_ENVIRONMENT"].ToString();
 
+            var config = new ConfigurationBuilder()
+                .SetBasePath(System.IO.Directory.GetCurrentDirectory())
+#if DEBUG
+
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+#else
+               .AddJsonFile($"appsettings.{ASPNETCORE_ENVIRONMENT}.json", optional: true, reloadOnChange: true)
+#endif
+               .Build();
+
+            LogManager.Configuration = new NLogLoggingConfiguration(config.GetSection("NLog"));
+
+            var logger = NLog.Web.NLogBuilder.ConfigureNLog(LogManager.Configuration).GetCurrentClassLogger();
+
             CreateHostBuilder(args).Build().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
+
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                })
+            .ConfigureLogging(logging =>
+            {
+                logging.ClearProviders();
+                logging.AddConsole();
+                logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+            })
+           .UseNLog();  // NLog: Setup NLog for Dependency injection;
     }
 }

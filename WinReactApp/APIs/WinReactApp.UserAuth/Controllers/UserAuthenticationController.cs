@@ -16,11 +16,14 @@ namespace WinReactApp.UserAuth.Controllers
     using AutoMapper;
     using FluentValidation.Results;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Diagnostics;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using Microsoft.IdentityModel.Tokens;
+    using NLog;
+    using NLog.Web;
     using WinReactApp.ResourceModel.UserAuth;
     using WinReactApp.UserAuth.Domain;
     using WinReactApp.UserAuth.Extensions.Custom;
@@ -51,6 +54,8 @@ namespace WinReactApp.UserAuth.Controllers
             this._logger = logger;
             this._configuration = configuration;
             this._userAuthenticationRepository = userAuthenticationRepository;
+
+            this._logger.LogDebug(1, "NLog injected into HomeController");
         }
 
         #region Authentication
