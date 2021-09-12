@@ -137,6 +137,7 @@ namespace WinReactApp.UserAuth.Controllers
                 };
 
             authClaims.Add(new Claim(ClaimTypes.Role, "Administrator"));
+            authClaims.Add(new Claim(ClaimTypes.Role, "Administrator1"));
 
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._configuration["JWT:Secret"]));
 

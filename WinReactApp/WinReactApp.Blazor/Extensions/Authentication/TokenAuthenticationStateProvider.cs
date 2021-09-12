@@ -1,5 +1,6 @@
 ﻿namespace WinReactApp.Blazor.Extensions.Authentication
 {
+    using Microsoft.AspNetCore.Components;
     using Microsoft.AspNetCore.Components.Authorization;
     using Microsoft.JSInterop;
     using System;
@@ -12,10 +13,12 @@
     public class TokenAuthenticationStateProvider : AuthenticationStateProvider
     {
         private readonly IJSRuntime _jsRuntime;
+        private readonly NavigationManager _navigationManager;
 
-        public TokenAuthenticationStateProvider(IJSRuntime jsRuntime)
+        public TokenAuthenticationStateProvider(IJSRuntime jsRuntime, NavigationManager navigationManager)
         {
             _jsRuntime = jsRuntime;
+            _navigationManager = navigationManager;
         }
 
         public async Task SetTokenAsync(string token, DateTime expiry = default)
@@ -76,6 +79,25 @@
                 case 3: base64 += "="; break;
             }
             return Convert.FromBase64String(base64);
+        }
+
+        public async Task ValidateUserAuthenticationForPageAsync()
+        {
+            var authenticationState = await this.GetAuthenticationStateAsync();
+
+            if (authenticationState?.User?.Identity is null || !authenticationState.User.Identity.IsAuthenticated)
+            {
+                _navigationManager.NavigateTo("login", true);
+            }
+        }
+
+        public async Task GetUserClaimsAsync()
+        {
+            var authenticationState = await this.GetAuthenticationStateAsync();
+
+            foreach (var item in authenticationState.User.Claims)
+            {
+            }
         }
     }
 }

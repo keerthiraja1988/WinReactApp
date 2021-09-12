@@ -1,15 +1,27 @@
 ﻿@page "/"
+
 @inject IJSRuntime _jsRuntime
+@inject TokenAuthenticationStateProvider _authenticationStateProvider
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
+<AuthorizeView>
+    <Authorized>
+        <h1>Hello, @context.User.Identity.Name !</h1>
+        <p>Welcome to your new app.</p>
+    </Authorized>
+    <NotAuthorized>
+        <p>Not Authrized</p>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await this._jsRuntime.InvokeVoidAsync("sharedController.hideLoadingIndicator");
     }
 
+    protected override async Task OnInitializedAsync()
+    {
+        await this._jsRuntime.InvokeVoidAsync("sharedController.hideLoadingIndicator");
+
+        await this._authenticationStateProvider.ValidateUserAuthenticationForPageAsync();
+    }
 }

@@ -53,8 +53,15 @@
             }
             else
             {
+                var body = await response.Content.ReadAsStringAsync();
+                AuthTokenResourceModel authTokenResourceModel = System.Text.Json.JsonSerializer.Deserialize<AuthTokenResourceModel>(body);
+
+                Console.WriteLine(authTokenResourceModel.AuthToken);
+
+                await _authStateProvider.SetTokenAsync(authTokenResourceModel.AuthToken, authTokenResourceModel.ExpireOn);
+
                 this._sharedServiceObjRef = DotNetObjectReference.Create(_sharedService);
-                await this._jsRuntime.InvokeVoidAsync("authController.onSuccessUserLogin", _sharedServiceObjRef);
+                _navigationManager.NavigateTo("");
             }
 
             await this._jsRuntime.InvokeVoidAsync("sharedController.hideLoadingIndicator");
@@ -65,12 +72,6 @@
             await this._jsRuntime.InvokeVoidAsync("sharedController.clearValidationSummary");
 
             LoginUserRM = new LoginUserResourseModel();
-        }
-
-        [JSInvokable]
-        public void NavigateToPage(string page)
-        {
-            _navigationManager.NavigateTo(page);
         }
     }
 }

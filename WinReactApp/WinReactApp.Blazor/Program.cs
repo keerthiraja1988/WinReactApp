@@ -41,6 +41,9 @@ namespace WinReactApp.Blazor
                 client.BaseAddress = new Uri(builder.Configuration["API_URLS:WinReactApp.UserAuth"]);
             });
 
+            builder.Services.AddOptions();
+            builder.Services.AddAuthorizationCore();
+
             builder.Services.AddScoped<TokenAuthenticationStateProvider>();
             builder.Services.AddScoped<AuthenticationStateProvider>(provider => provider.GetRequiredService<TokenAuthenticationStateProvider>());
 

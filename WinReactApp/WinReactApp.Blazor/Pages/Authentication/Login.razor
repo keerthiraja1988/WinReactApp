@@ -57,7 +57,12 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await this._jsRuntime.InvokeVoidAsync("sharedController.hideLoadingIndicator");
+        //await this._jsRuntime.InvokeVoidAsync("sharedController.hideLoadingIndicator");
     }
 
+    protected override async Task OnInitializedAsync()
+    {
+        await this._jsRuntime.InvokeVoidAsync("sharedController.hideLoadingIndicator");
+
+    }
 }
