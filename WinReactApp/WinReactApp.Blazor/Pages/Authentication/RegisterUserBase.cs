@@ -33,9 +33,10 @@
         protected RegisterUserResourseModel RegisterUserRM = new RegisterUserResourseModel();
         protected ServerValidator serverValidator;
 
-        public async Task HandleValidSubmit()
+        public async Task SubmitRegisterForm()
         {
-            await this._jsRuntime.InvokeVoidAsync("sharedController.hideLoadingIndicator");
+            await this._jsRuntime.InvokeVoidAsync("sharedController.showLoadingIndicator");
+
             await this._jsRuntime.InvokeVoidAsync("sharedController.clearValidationSummary");
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(RegisterUserRM), Encoding.UTF8, "application/json");
@@ -52,7 +53,7 @@
                 await this._jsRuntime.InvokeVoidAsync("authController.onSuccessRegistration", _sharedServiceObjRef);
             }
 
-            await this._jsRuntime.InvokeVoidAsync("sharedController.showLoadingIndicator");
+            await this._jsRuntime.InvokeVoidAsync("sharedController.hideLoadingIndicator");
         }
 
         public async Task ClearRegisterForm()

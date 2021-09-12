@@ -22,13 +22,9 @@
         publicMethod.hideLoadingIndicator = function () {
             setTimeout(
                 function () {
-                    document.getElementById("myNav").style.height = "0%";
-                }, 100);
-
-            setTimeout(
-                function () {
                     $('#myNavLoadingIndicatorText').text('Processing, Please Wait...');
-                }, 200);
+                    document.getElementById("myNav").style.height = "0%";
+                }, 500);
         }
 
         publicMethod.hideLoadingIndicatorAsync = async function () {
