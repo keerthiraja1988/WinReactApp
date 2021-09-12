@@ -54,11 +54,10 @@
             else
             {
                 var body = await response.Content.ReadAsStringAsync();
+
                 AuthTokenResourceModel authTokenResourceModel = System.Text.Json.JsonSerializer.Deserialize<AuthTokenResourceModel>(body);
 
-                Console.WriteLine(authTokenResourceModel.AuthToken);
-
-                await _authStateProvider.SetTokenAsync(authTokenResourceModel.AuthToken, authTokenResourceModel.ExpireOn);
+                await _authStateProvider.SetTokenAsync(authTokenResourceModel.AuthToken, authTokenResourceModel, authTokenResourceModel.ExpireOn);
 
                 this._sharedServiceObjRef = DotNetObjectReference.Create(_sharedService);
                 _navigationManager.NavigateTo("");

@@ -3,30 +3,56 @@
 @inject IJSRuntime _jsRuntime
 @inject TokenAuthenticationStateProvider _authenticationStateProvider
 
+@using WinReactApp.ResourceModel.UserAuth;
+
 <AuthorizeView>
     <Authorized>
         <h3>User Name : @context.User.Identity.Name !</h3>
 
-        @if (@context.User.Claims.Count() > 0)
-        {
-            <table class="table">
-                @foreach (var claim in @context.User.Claims)
-                {
-                    <tr>
-                        <td>@claim.Type</td>
-                        <td>@claim.Value</td>
-                    </tr>
-                }
-            </table>
-        }
+        <table class="table">
+
+            <tr>
+                <td>User Id</td>
+                <td>@UserDetailsRM.UserId</td>
+            </tr>
+
+            <tr>
+                <td>User Name</td>
+                <td>@UserDetailsRM.UserName</td>
+            </tr>
+
+            <tr>
+                <td>Email Address</td>
+                <td>@UserDetailsRM.EmailAddress</td>
+            </tr>
+
+            <tr>
+
+                <td>Expiration</td>
+                <td>@UserDetailsRM.Expiration.ToString()</td>
+            </tr>
+
+            <tr>
+                <td>Roles</td>
+                <td>@string.Join(",", @UserDetailsRM.Roles)</td>
+            </tr>
+        </table>
     </Authorized>
 </AuthorizeView>
 
 @code {
+    [Parameter]
+    public UserDetailsResourceModel UserDetailsRM { get; set; } = new UserDetailsResourceModel();
+
+    [Parameter]
+    public EventCallback<UserDetailsResourceModel> UserDetailsRMChanged { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        await this._jsRuntime.InvokeVoidAsync("sharedController.hideLoadingIndicator");
         await this._authenticationStateProvider.ValidateUserAuthenticationForPageAsync();
-        await this._authenticationStateProvider.GetUserClaimsAsync();
+        UserDetailsRM = await this._authenticationStateProvider.GetUserClaimsAsync();
+
     }
+
 }

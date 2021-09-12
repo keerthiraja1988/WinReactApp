@@ -9,6 +9,7 @@
     using System.Security.Claims;
     using System.Text.Json;
     using System.Threading.Tasks;
+    using WinReactApp.ResourceModel.UserAuth;
 
     public class TokenAuthenticationStateProvider : AuthenticationStateProvider
     {
@@ -21,7 +22,7 @@
             _navigationManager = navigationManager;
         }
 
-        public async Task SetTokenAsync(string token, DateTime expiry = default)
+        public async Task SetTokenAsync(string token, AuthTokenResourceModel authTokenRM = null, DateTime expiry = default)
         {
             if (token == null)
             {
@@ -91,13 +92,56 @@
             }
         }
 
-        public async Task GetUserClaimsAsync()
+        public async Task<UserDetailsResourceModel> GetUserClaimsAsync()
         {
             var authenticationState = await this.GetAuthenticationStateAsync();
 
+            UserDetailsResourceModel userDetailsRM = new UserDetailsResourceModel();
+
             foreach (var item in authenticationState.User.Claims)
             {
+                if (item.Type.ToLower().Contains("nameidentifier"))
+                {
+                    userDetailsRM.UserId = item.Value;
+                }
+
+                if (item.Type.ToLower().Contains("name"))
+                {
+                    userDetailsRM.UserName = item.Value;
+                }
+
+                if (item.Type.ToLower().Contains("emailaddress"))
+                {
+                    userDetailsRM.EmailAddress = item.Value;
+                }
+
+                if (item.Type.ToLower().Contains("expiration"))
+                {
+                    userDetailsRM.Expiration = Convert.ToDateTime(item.Value);
+                }
+
+                if (item.Type.ToLower().Contains("jti"))
+                {
+                    userDetailsRM.Jti = item.Value;
+                }
+
+                if (item.Type.ToLower().Contains("role"))
+                {
+                    var roles = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(item.Value);
+
+                    foreach (var role in roles)
+                    {
+                        if (!string.IsNullOrEmpty(role) && role != "null")
+                        {
+                            string role1 = role.Replace("'", "");
+
+                            userDetailsRM.Roles.Add(role1);
+                        }
+                    }
+                }
             }
+
+            return userDetailsRM;
         }
     }
 }
