@@ -12,7 +12,6 @@
     using System.Threading.Tasks;
     using WinReactApp.Blazor.Clients;
     using WinReactApp.Blazor.Extensions;
-    using WinReactApp.Blazor.Extensions.Authentication;
     using WinReactApp.Blazor.Service;
     using WinReactApp.ResourceModel.UserAuth;
 

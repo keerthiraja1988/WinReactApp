@@ -2,7 +2,7 @@
 
 @inject IJSRuntime _jsRuntime
 @inject TokenAuthenticationStateProvider _authenticationStateProvider
-
+@inject AuthValidationClient _authValidationClient
 @using WinReactApp.ResourceModel.UserAuth;
 
 @attribute [Authorize]
@@ -42,6 +42,14 @@
     </Authorized>
 </AuthorizeView>
 
+<div class="col">
+    <button type="button" class="btn btn-primary" @onclick="ValidateAuthentication">Validate Authentication</button>
+</div>
+
+<div class="col">
+    <button type="button" class="btn btn-primary" @onclick="ValidateAdministrator1Role">Validate Administrator1 Role</button>
+</div>
+
 @code {
     [Parameter]
     public UserDetailsResourceModel UserDetailsRM { get; set; } = new UserDetailsResourceModel();
@@ -55,6 +63,31 @@
         //await this._authenticationStateProvider.ValidateUserAuthenticationForPageAsync();
         UserDetailsRM = await this._authenticationStateProvider.GetUserClaimsAsync();
 
+    }
+
+    private async Task ValidateAuthentication()
+    {
+        var response = await this._authValidationClient.ValidateAuthenticationAsync();
+
+        if (response.StatusCode == HttpStatusCode.OK)
+        {
+            await this._jsRuntime.InvokeVoidAsync("authController.onAuthValidationSuccess");
+        }
+    }
+
+    private async Task ValidateAdministrator1Role()
+    {
+        var response = await this._authValidationClient.ValidateAdministrator1RoleAsync();
+
+        if (response.StatusCode == HttpStatusCode.OK)
+        {
+            await this._jsRuntime.InvokeVoidAsync("authController.onAuthValidationSuccess");
+        }
+        else
+        {
+            await this._jsRuntime.InvokeVoidAsync("authController.onAuthValidationSuccess");
+
+        }
     }
 
 }

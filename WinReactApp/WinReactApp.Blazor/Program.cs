@@ -15,7 +15,7 @@ namespace WinReactApp.Blazor
     using System.Text;
     using System.Threading.Tasks;
     using WinReactApp.Blazor.Clients;
-    using WinReactApp.Blazor.Extensions.Authentication;
+    using WinReactApp.Blazor.Extensions;
     using WinReactApp.Blazor.Service;
 
     public class Program
@@ -37,6 +37,10 @@ namespace WinReactApp.Blazor
             await ConfigureServices(builder, http);
 
             builder.Services.AddHttpClient<UserAuthenticationClient>(client =>
+            {
+                client.BaseAddress = new Uri(builder.Configuration["API_URLS:WinReactApp.UserAuth"]);
+            });
+            builder.Services.AddHttpClient<AuthValidationClient>(client =>
             {
                 client.BaseAddress = new Uri(builder.Configuration["API_URLS:WinReactApp.UserAuth"]);
             });

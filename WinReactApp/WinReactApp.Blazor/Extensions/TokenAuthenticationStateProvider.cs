@@ -1,4 +1,4 @@
-﻿namespace WinReactApp.Blazor.Extensions.Authentication
+﻿namespace WinReactApp.Blazor.Extensions
 {
     using Microsoft.AspNetCore.Components;
     using Microsoft.AspNetCore.Components.Authorization;
@@ -6,6 +6,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net;
+    using System.Net.Http;
     using System.Security.Claims;
     using System.Text.Json;
     using System.Threading.Tasks;
@@ -142,6 +144,14 @@
             }
 
             return userDetailsRM;
+        }
+
+        public async Task ValidateRequestAsync(HttpResponseMessage httpResponseMessage)
+        {
+            if (httpResponseMessage.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                _navigationManager.NavigateTo("logout");
+            }
         }
     }
 }

@@ -14,6 +14,27 @@
                 function () {
                     _sharedServiceObjRef.invokeMethodAsync("NavigateToPageAsync", "login");
                 }, 5000);
-        }
+        },
+
+            publicMethod.onAuthValidationSuccess = function () {
+                Swal.fire(
+                    {
+                        title: 'Success',
+                        text: 'Your are authrized!',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 5000,
+                    })
+            },
+            publicMethod.onAuthValidationError = function () {
+                Swal.fire(
+                    {
+                        title: 'Error',
+                        text: 'Your are now authrized!',
+                        icon: 'error',
+                        showConfirmButton: false,
+                        timer: 5000,
+                    })
+            }
     }(window.authController = window.authController || {}, jQuery)
 );
