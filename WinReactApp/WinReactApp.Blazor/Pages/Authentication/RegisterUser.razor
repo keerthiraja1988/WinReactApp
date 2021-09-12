@@ -4,7 +4,7 @@
 @using System.Text
 @using Newtonsoft.Json
 
-@inject IJSRuntime js
+@inject IJSRuntime _jsRuntime
 
 @inherits RegisterUserBase
 <div class="">
@@ -75,9 +75,10 @@
 </div>
 
 @code {
-    [JSInvokable]
-    public static async Task NavigateToPage1()
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        Console.WriteLine("test");
+        await this._jsRuntime.InvokeVoidAsync("sharedController.hideLoadingIndicator");
     }
+
 }
