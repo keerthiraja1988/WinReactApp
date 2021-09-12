@@ -1,5 +1,7 @@
 namespace WinReactApp.Blazor
 {
+    using Blazored.LocalStorage;
+    using Microsoft.AspNetCore.Components.Authorization;
     using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +15,7 @@ namespace WinReactApp.Blazor
     using System.Text;
     using System.Threading.Tasks;
     using WinReactApp.Blazor.Clients;
+    using WinReactApp.Blazor.Extensions.Authentication;
     using WinReactApp.Blazor.Service;
 
     public class Program
@@ -38,6 +41,11 @@ namespace WinReactApp.Blazor
                 client.BaseAddress = new Uri(builder.Configuration["API_URLS:WinReactApp.UserAuth"]);
             });
 
+            builder.Services.AddScoped<TokenAuthenticationStateProvider>();
+            builder.Services.AddScoped<AuthenticationStateProvider>(provider => provider.GetRequiredService<TokenAuthenticationStateProvider>());
+
+            builder.Services.AddBlazoredLocalStorage();
+
             await builder.Build().RunAsync();
         }
 
@@ -59,9 +67,6 @@ namespace WinReactApp.Blazor
             {
                 appSettingsFile = "appsettings." + ASPNETCORE_ENVIRONMENT + ".json";
             }
-
-            Console.WriteLine(ASPNETCORE_ENVIRONMENT);
-            Console.WriteLine(appSettingsFile);
 
             using var response = await http.GetAsync(appSettingsFile);
             using var stream = await response.Content.ReadAsStreamAsync();

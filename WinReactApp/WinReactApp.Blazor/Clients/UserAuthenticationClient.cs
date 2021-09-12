@@ -25,5 +25,12 @@
 
             return response;
         }
+
+        public async Task<HttpResponseMessage> LoginUserAsync(StringContent stringContent)
+        {
+            var response = await _httpClient.PostAsync("UserAuth/LoginUser?api-version=1.0", stringContent);
+
+            return response;
+        }
     }
 }

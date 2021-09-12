@@ -1,7 +1,63 @@
 ﻿@page "/login"
 
-<h3>Login</h3>
+@using WinReactApp.ResourceModel.UserAuth
+@using WinReactApp.Blazor.Extensions
+@using System.Text
+@using Newtonsoft.Json
+
+@inject IJSRuntime _jsRuntime
+
+@inherits LoginBase
+<div class="">
+
+    <div class="row">
+        <div class="col-12 col-sm-12 col-md-2 col-lg-4 col-xl-4">
+        </div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-4 col-xl-4">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h2>User Login</h2>
+                </div>
+                <div class="card-body">
+                    <EditForm Model="LoginUserRM" OnSubmit="@(async () => await SubmitRegisterForm())">
+
+                        <div class="form-group mb-3">
+                            <label>Email Address</label>
+                            <ValidationMessage For="@(() => LoginUserRM.EmailAddress)" />
+                            <InputText class="form-control" @bind-Value="LoginUserRM.EmailAddress" />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label>Password</label>
+                            <InputText class="form-control" @bind-Value="LoginUserRM.Password" />
+                            <ValidationMessage For="@(() => LoginUserRM.Password)" />
+                        </div>
+
+                        <ServerValidator @ref="serverValidator" />
+                        <ValidationSummary color="red" />
+
+                        <div class="form-group mb-3 text-center">
+                            <button type="submit" class="btn btn-primary">
+                                Register
+                            </button>
+                            <button type="button" @onclick="ClearRegisterForm" class="btn btn-secondary ms-2">
+                                Clear
+                            </button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-12 col-md-2 col-lg-4 col-xl-4">
+        </div>
+    </div>
+</div>
 
 @code {
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await this._jsRuntime.InvokeVoidAsync("sharedController.hideLoadingIndicator");
+    }
 
 }

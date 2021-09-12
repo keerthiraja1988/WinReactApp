@@ -14,6 +14,12 @@
                 function () {
                     _sharedServiceObjRef.invokeMethodAsync("NavigateToPageAsync", "login");
                 }, 5000);
-        }
+        },
+            publicMethod.onSuccessUserLogin = function (_sharedServiceObjRef) {
+                setTimeout(
+                    function () {
+                        _sharedServiceObjRef.invokeMethodAsync("NavigateToPageAsync", "");
+                    }, 5000);
+            }
     }(window.authController = window.authController || {}, jQuery)
 );
