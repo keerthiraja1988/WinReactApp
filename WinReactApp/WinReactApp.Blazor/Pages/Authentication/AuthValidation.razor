@@ -4,6 +4,9 @@
 @inject TokenAuthenticationStateProvider _authenticationStateProvider
 
 @using WinReactApp.ResourceModel.UserAuth;
+@using Microsoft.AspNetCore.Authorization
+
+@attribute [Authorize]
 
 <AuthorizeView>
     <Authorized>
@@ -50,7 +53,7 @@
     protected override async Task OnInitializedAsync()
     {
         await this._jsRuntime.InvokeVoidAsync("sharedController.hideLoadingIndicator");
-        await this._authenticationStateProvider.ValidateUserAuthenticationForPageAsync();
+        //await this._authenticationStateProvider.ValidateUserAuthenticationForPageAsync();
         UserDetailsRM = await this._authenticationStateProvider.GetUserClaimsAsync();
 
     }

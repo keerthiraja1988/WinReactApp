@@ -3,6 +3,7 @@
 @inject IJSRuntime _jsRuntime
 @inject TokenAuthenticationStateProvider _authenticationStateProvider
 
+@attribute [Authorize]
 <AuthorizeView>
     <Authorized>
         <h1>Hello, @context.User.Identity.Name !</h1>
@@ -21,7 +22,5 @@
     protected override async Task OnInitializedAsync()
     {
         await this._jsRuntime.InvokeVoidAsync("sharedController.hideLoadingIndicator");
-
-        await this._authenticationStateProvider.ValidateUserAuthenticationForPageAsync();
     }
 }
