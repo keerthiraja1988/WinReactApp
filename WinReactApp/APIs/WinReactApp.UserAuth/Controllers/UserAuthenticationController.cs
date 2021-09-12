@@ -125,7 +125,7 @@ namespace WinReactApp.UserAuth.Controllers
                 return this.Unauthorized(authToken);
             }
 
-            var expire = DateTime.Now.AddMinutes(1);
+            var expire = DateTime.Now.AddHours(3);
 
             var authClaims = new List<Claim>
                 {
