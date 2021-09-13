@@ -1,0 +1,98 @@
+﻿@page "/AuthAdmin1"
+
+@inject IJSRuntime _jsRuntime
+@inject TokenAuthenticationStateProvider _authenticationStateProvider
+@inject AuthValidationClient _authValidationClient
+@using WinReactApp.ResourceModel.UserAuth;
+
+@attribute [Authorize]
+
+<AuthorizeView>
+    <Authorized>
+        <h3>User Name : @context.User.Identity.Name !</h3>
+
+        <table class="table">
+
+            <tr>
+                <td>User Id</td>
+                <td>@UserDetailsRM.UserId</td>
+            </tr>
+
+            <tr>
+                <td>User Name</td>
+                <td>@UserDetailsRM.UserName</td>
+            </tr>
+
+            <tr>
+                <td>Email Address</td>
+                <td>@UserDetailsRM.EmailAddress</td>
+            </tr>
+
+            <tr>
+
+                <td>Expiration</td>
+                <td>@UserDetailsRM.Expiration</td>
+            </tr>
+
+            <tr>
+                <td>Roles</td>
+                <td>@string.Join(",", @UserDetailsRM.Roles)</td>
+            </tr>
+        </table>
+    </Authorized>
+</AuthorizeView>
+
+<div class="col p-5">
+    <button type="button" class="btn btn-primary" @onclick="ValidateAuthentication">Validate Authentication</button>
+</div>
+
+<div class="col p-5">
+    <button type="button" class="btn btn-primary" @onclick="ValidateAdministrator1Role">Validate Administrator1 Role</button>
+</div>
+
+<div class="col p-5">
+    <button type="button" class="btn btn-primary" @onclick="RaiseError">Raise Error</button>
+</div>
+
+@code {
+    [Parameter]
+    public UserDetailsResourceModel UserDetailsRM { get; set; } = new UserDetailsResourceModel();
+
+    [Parameter]
+    public EventCallback<UserDetailsResourceModel> UserDetailsRMChanged { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await this._jsRuntime.InvokeVoidAsync("sharedController.hideLoadingIndicator");
+        //await this._authenticationStateProvider.ValidateUserAuthenticationForPageAsync();
+        UserDetailsRM = await this._authenticationStateProvider.GetUserClaimsAsync();
+
+    }
+
+    private async Task ValidateAuthentication()
+    {
+        var response = await this._authValidationClient.ValidateAuthenticationAsync();
+
+        if (response.StatusCode == HttpStatusCode.OK)
+        {
+            await this._jsRuntime.InvokeVoidAsync("authController.onAuthValidationSuccess");
+        }
+    }
+
+    private async Task ValidateAdministrator1Role()
+    {
+        var response = await this._authValidationClient.ValidateAdministrator1RoleAsync();
+
+        if (response.StatusCode == HttpStatusCode.OK)
+        {
+            await this._jsRuntime.InvokeVoidAsync("authController.onAuthValidationSuccess");
+        }
+    }
+
+    private async Task RaiseError()
+    {
+        var response = await this._authValidationClient.RaiseError();
+
+    }
+
+}

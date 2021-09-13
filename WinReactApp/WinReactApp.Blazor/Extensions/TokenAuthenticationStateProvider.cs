@@ -159,8 +159,6 @@
             }
             else if (httpResponseMessage.StatusCode == HttpStatusCode.InternalServerError)
             {
-                //var requestId = httpResponseMessage.Headers.FirstOrDefault(x => x.Key == "X-Request-Id").Value.FirstOrDefault();
-
                 string requestId = string.Empty;
 
                 foreach (var item in httpResponseMessage.Headers)
@@ -170,15 +168,6 @@
                         requestId = item.Value.FirstOrDefault();
                     }
                 }
-
-                //var stBuilder = new StringBuilder();
-                //foreach (var header in httpResponseMessage.Headers)
-                //    stBuilder.AppendLine($"'{header.Key}': [{String.Join(',', header.Value)}]");
-                //foreach (var header in httpResponseMessage.TrailingHeaders)
-                //    stBuilder.AppendLine($"'{header.Key}': [{String.Join(',', header.Value)}]");
-                //stBuilder.AppendLine("End of headers! Total header count: " + (httpResponseMessage.Headers.Count() + httpResponseMessage.TrailingHeaders.Count()) + " StatusCode: " + httpResponseMessage.StatusCode);
-
-                //var vvvvv = stBuilder.ToString();
 
                 await this._jsRuntime.InvokeVoidAsync("sharedController.handleHttpInternalServerError", requestId);
             }

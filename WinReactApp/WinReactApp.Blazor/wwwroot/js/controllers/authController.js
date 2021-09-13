@@ -21,8 +21,8 @@
                     {
                         title: 'Success',
                         text: 'Your are authrized!',
-                        icon: 'success',                       
-                        timer: 5000,                     
+                        icon: 'success',
+                        timer: 5000,
                         allowOutsideClick: false,
                     })
             },
@@ -31,11 +31,21 @@
                     {
                         title: 'Error',
                         text: 'Your are not authorized!',
-                        icon: 'error',                     
-                        timer: 5000,                     
+                        icon: 'error',
+                        timer: 5000,
                         allowOutsideClick: false,
                     })
             }
+
+        publicMethod.onAuthUnAuthorizedError = function () {
+            Swal.fire(
+                {
+                    title: 'Oops',
+                    text: 'Email Address or Password is incorrect. Please try again.',
+                    icon: 'error',
+                    timer: 5000,
+                    allowOutsideClick: false,
+                })
+        }
     }(window.authController = window.authController || {}, jQuery)
 );
-

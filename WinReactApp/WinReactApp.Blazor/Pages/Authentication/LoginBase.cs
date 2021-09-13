@@ -30,6 +30,9 @@
         protected UserAuthenticationClient _userAuthenticationClient { get; set; }
 
         [Inject]
+        protected TokenAuthenticationStateProvider _authenticationStateProvider { get; set; }
+
+        [Inject]
         protected TokenAuthenticationStateProvider _authStateProvider { get; set; }
 
         protected DotNetObjectReference<SharedService> _sharedServiceObjRef;
@@ -46,9 +49,17 @@
 
             var response = await this._userAuthenticationClient.LoginUserAsync(content);
 
-            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
                 serverValidator.Validate(response, content);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                await this._jsRuntime.InvokeVoidAsync("authController.onAuthUnAuthorizedError");
+            }
+            else if (!response.IsSuccessStatusCode)
+            {
+                await _authenticationStateProvider.ValidateRequestAsync(response);
             }
             else
             {
