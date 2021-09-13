@@ -24,12 +24,12 @@
                         <div class="form-group mb-3">
                             <label>Email Address</label>
                             <ValidationMessage For="@(() => LoginUserRM.EmailAddress)" />
-                            <InputText class="form-control" @bind-Value="LoginUserRM.EmailAddress" />
+                            <InputText type="email" autocomplete="on" class="form-control" @bind-Value="LoginUserRM.EmailAddress" />
                         </div>
 
                         <div class="form-group mb-3">
                             <label>Password</label>
-                            <InputText class="form-control" @bind-Value="LoginUserRM.Password" />
+                            <InputText type="password" autocomplete="on" class="form-control" @bind-Value="LoginUserRM.Password" />
                             <ValidationMessage For="@(() => LoginUserRM.Password)" />
                         </div>
 

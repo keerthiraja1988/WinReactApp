@@ -31,7 +31,7 @@
             <tr>
 
                 <td>Expiration</td>
-                <td>@UserDetailsRM.Expiration.ToString()</td>
+                <td>@UserDetailsRM.Expiration</td>
             </tr>
 
             <tr>
@@ -42,12 +42,16 @@
     </Authorized>
 </AuthorizeView>
 
-<div class="col">
+<div class="col p-5">
     <button type="button" class="btn btn-primary" @onclick="ValidateAuthentication">Validate Authentication</button>
 </div>
 
-<div class="col">
+<div class="col p-5">
     <button type="button" class="btn btn-primary" @onclick="ValidateAdministrator1Role">Validate Administrator1 Role</button>
+</div>
+
+<div class="col p-5">
+    <button type="button" class="btn btn-primary" @onclick="RaiseError">Raise Error</button>
 </div>
 
 @code {
@@ -83,11 +87,12 @@
         {
             await this._jsRuntime.InvokeVoidAsync("authController.onAuthValidationSuccess");
         }
-        else
-        {
-            await this._jsRuntime.InvokeVoidAsync("authController.onAuthValidationSuccess");
+    }
 
-        }
+    private async Task RaiseError()
+    {
+        var response = await this._authValidationClient.RaiseError();
+
     }
 
 }

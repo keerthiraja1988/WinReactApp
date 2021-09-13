@@ -21,20 +21,21 @@
                     {
                         title: 'Success',
                         text: 'Your are authrized!',
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 5000,
+                        icon: 'success',                       
+                        timer: 5000,                     
+                        allowOutsideClick: false,
                     })
             },
             publicMethod.onAuthValidationError = function () {
                 Swal.fire(
                     {
                         title: 'Error',
-                        text: 'Your are now authrized!',
-                        icon: 'error',
-                        showConfirmButton: false,
-                        timer: 5000,
+                        text: 'Your are not authorized!',
+                        icon: 'error',                     
+                        timer: 5000,                     
+                        allowOutsideClick: false,
                     })
             }
     }(window.authController = window.authController || {}, jQuery)
 );
+

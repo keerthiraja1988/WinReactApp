@@ -134,13 +134,14 @@ namespace WinReactApp.UserAuth
 
             app.UseRouting();
 
+            app.UseCors(builder => builder
+                     .AllowAnyOrigin()
+                     .AllowAnyMethod()
+                     .AllowAnyHeader()
+                     .WithExposedHeaders("X-Request-Id"));
+
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseCors(builder => builder
-                        .AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader());
 
             app.UseExceptionHandler(a => a.Run(async context =>
             {

@@ -9,6 +9,7 @@
     using System.Net;
     using System.Net.Http;
     using System.Security.Claims;
+    using System.Text;
     using System.Text.Json;
     using System.Threading.Tasks;
     using WinReactApp.ResourceModel.UserAuth;
@@ -119,7 +120,7 @@
 
                 if (item.Type.ToLower().Contains("expiration"))
                 {
-                    userDetailsRM.Expiration = Convert.ToDateTime(item.Value);
+                    userDetailsRM.Expiration = item.Value;
                 }
 
                 if (item.Type.ToLower().Contains("jti"))
@@ -150,7 +151,36 @@
         {
             if (httpResponseMessage.StatusCode == HttpStatusCode.Unauthorized)
             {
-                _navigationManager.NavigateTo("logout");
+                _navigationManager.NavigateTo("login");
+            }
+            else if (httpResponseMessage.StatusCode == HttpStatusCode.Forbidden)
+            {
+                await this._jsRuntime.InvokeVoidAsync("sharedController.handleForbiddenHttpError");
+            }
+            else if (httpResponseMessage.StatusCode == HttpStatusCode.InternalServerError)
+            {
+                //var requestId = httpResponseMessage.Headers.FirstOrDefault(x => x.Key == "X-Request-Id").Value.FirstOrDefault();
+
+                string requestId = string.Empty;
+
+                foreach (var item in httpResponseMessage.Headers)
+                {
+                    if (item.Key.ToLower() == "x-request-id")
+                    {
+                        requestId = item.Value.FirstOrDefault();
+                    }
+                }
+
+                //var stBuilder = new StringBuilder();
+                //foreach (var header in httpResponseMessage.Headers)
+                //    stBuilder.AppendLine($"'{header.Key}': [{String.Join(',', header.Value)}]");
+                //foreach (var header in httpResponseMessage.TrailingHeaders)
+                //    stBuilder.AppendLine($"'{header.Key}': [{String.Join(',', header.Value)}]");
+                //stBuilder.AppendLine("End of headers! Total header count: " + (httpResponseMessage.Headers.Count() + httpResponseMessage.TrailingHeaders.Count()) + " StatusCode: " + httpResponseMessage.StatusCode);
+
+                //var vvvvv = stBuilder.ToString();
+
+                await this._jsRuntime.InvokeVoidAsync("sharedController.handleHttpInternalServerError", requestId);
             }
         }
     }

@@ -14,7 +14,7 @@
 
         public string EmailAddress { get; set; }
 
-        public DateTime Expiration { get; set; }
+        public string Expiration { get; set; }
 
         public string Jti { get; set; }
 

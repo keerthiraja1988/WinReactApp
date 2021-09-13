@@ -203,6 +203,19 @@ namespace WinReactApp.UserAuth.Controllers
             return this.Ok("User is not administrator1");
         }
 
+        [Route("RaiseError")]
+        [HttpGet]
+        [AllowAnonymous]
+        [MapToApiVersion("1.0")]
+        [MapToApiVersion("1.1")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public IActionResult RaiseError_v1_x()
+        {
+            throw new Exception();
+        }
+
         #endregion Validate Authentication
 
         #endregion Authentication

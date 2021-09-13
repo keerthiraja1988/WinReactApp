@@ -38,5 +38,29 @@
                     $('#myNavLoadingIndicatorText').text('Processing, Please Wait...');
                 }, 200);
         }
+
+        publicMethod.handleForbiddenHttpError = async function () {
+            Swal.fire(
+                {
+                    title: '403 - Forbidden!',
+                    text: "You don't have permission for this request",
+                    icon: 'warning',
+                    allowOutsideClick: false,
+                }
+            )
+        }
+
+        publicMethod.handleHttpInternalServerError = async function (requestId) {
+            Swal.fire(
+                {
+                    title: '500 - Internal Server Error!',
+                    text: "An error occured while processing you request",
+                    icon: 'warning',
+                    allowOutsideClick: false,
+                    html:
+                        '<h6>Request Id : <b>' + requestId + '</b></h6>',
+                }
+            )
+        }
     }(window.sharedController = window.sharedController || {}, jQuery)
 );
