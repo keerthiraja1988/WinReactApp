@@ -10,18 +10,23 @@ namespace WinReactApp.ManageUsers
     using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Diagnostics;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.ApiExplorer;
+    using Microsoft.AspNetCore.Mvc.ApplicationModels;
     using Microsoft.AspNetCore.Mvc.Versioning;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Options;
     using Microsoft.IdentityModel.Tokens;
     using Swashbuckle.AspNetCore.SwaggerGen;
     using WinReactApp.ManageUsers.Extensions.AutoMapper;
+    using WinReactApp.ManageUsers.Extensions.Filters;
     using WinReactApp.ManageUsers.Extensions.Swagger;
     using WinReactApp.ManageUsers.Models;
 
@@ -65,13 +70,18 @@ namespace WinReactApp.ManageUsers
             services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
             services.AddSwaggerGen(options => options.OperationFilter<SwaggerDefaultValues>());
 
+            services.TryAddEnumerable(ServiceDescriptor.Transient<IApplicationModelProvider, ProduceResponseTypeModelProvider>());
+
             services.AddDbContext<DBContext>(o =>
             {
                 o.UseSqlServer(sqlConnectionString);
             });
 
-            services.AddControllers()
-                  .AddJsonOptions(options =>
+            services.AddControllers(options =>
+            {
+                options.Filters.Add(typeof(LoggingActionFilter));
+            })
+                   .AddJsonOptions(options =>
                   {
                       options.JsonSerializerOptions.PropertyNamingPolicy = null;
                   }).AddFluentValidation(options =>
@@ -110,29 +120,6 @@ namespace WinReactApp.ManageUsers
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
         {
-            app.Use(async (context, next) =>
-            {
-                string apiVersion = context.Request.Query["api-version"];
-
-                if (!string.IsNullOrEmpty(apiVersion))
-                {
-                    context.Response.Headers.Add("X-Api-Version", apiVersion);
-                }
-                else
-                {
-                    context.Response.Headers.Add("X-Api-Version", "1.1");
-                }
-
-                context.Response.Headers.Add("X-Default-Api-Version", "1.1");
-                context.Response.Headers.Add("X-Request-Id", context.TraceIdentifier);
-                context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
-                context.Response.Headers.Add("X-Frame-Options", "DENY");
-                context.Response.Headers.Add("X-XSS-Protection", "1; mode=block");
-
-                // Call the next delegate/middleware in the pipeline
-                await next();
-            });
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -153,14 +140,44 @@ namespace WinReactApp.ManageUsers
 
             app.UseRouting();
 
+            app.UseCors(builder => builder
+                   .AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader()
+                   .WithExposedHeaders("X-Request-Id"));
+
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseCors(builder => builder
-                        .AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader());
+            app.UseExceptionHandler(a => a.Run(async context =>
+            {
+                context.Response.Headers.Add("X-Request-Id", context.TraceIdentifier);
 
+                var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+                var exception = exceptionHandlerPathFeature.Error;
+
+                if (env.IsDevelopment())
+                {
+                    await context.Response.WriteAsJsonAsync(new
+                    {
+                        Error = "An error occured while processing your request.",
+                        IsError = true,
+                        StatusCode = 500,
+                        StackTrace = exception.StackTrace,
+                        Message = exception.Message,
+                        InnerException = exception.InnerException,
+                    });
+                }
+                else
+                {
+                    await context.Response.WriteAsJsonAsync(new
+                    {
+                        Error = "An error occured while processing your request.",
+                        IsError = true,
+                        StatusCode = 500,
+                    });
+                }
+            }));
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

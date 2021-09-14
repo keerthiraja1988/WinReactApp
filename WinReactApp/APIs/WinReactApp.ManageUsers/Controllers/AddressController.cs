@@ -10,6 +10,7 @@ namespace WinReactApp.ManageUsers.Controllers
     using System.Collections.Generic;
     using System.IdentityModel.Tokens.Jwt;
     using System.Linq;
+    using System.Net.Mime;
     using System.Security.Claims;
     using System.Text;
     using System.Threading.Tasks;
@@ -63,8 +64,8 @@ namespace WinReactApp.ManageUsers.Controllers
         [HttpPost]
         [MapToApiVersion("1.0")]
         [MapToApiVersion("1.1")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseAddressResourseModel))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationResult))]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> AddAddressAsync_v1_x(AddAddressResourseModel addAddressRM)
         {
             UserAddress userAddress = new UserAddress();
@@ -88,7 +89,9 @@ namespace WinReactApp.ManageUsers.Controllers
 
             this._context.SaveChanges();
 
-            return this.Ok("Address added successfully");
+            long userAddressId = userAddress.UserAddressId;
+
+            return this.Ok(new ResponseAddressResourseModel { UserAddressId = userAddressId, Message = "Address added successfully" });
         }
 
         [Route("GetAddresses")]
@@ -120,8 +123,8 @@ namespace WinReactApp.ManageUsers.Controllers
         [HttpPut]
         [MapToApiVersion("1.0")]
         [MapToApiVersion("1.1")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseAddressResourseModel))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationResult))]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> UpdateAddressAsync_v1_x(UpdateAddressResourseModel updateAddressRM)
         {
             var userAddress = await this._context.UserAddresses
@@ -152,18 +155,22 @@ namespace WinReactApp.ManageUsers.Controllers
 
             await this._context.SaveChangesAsync();
 
-            return this.Ok("Address updated successfully");
+            return this.Ok(new ResponseAddressResourseModel { UserAddressId = userAddress.UserAddressId, Message = "Address updated successfully" });
         }
 
         [Route("DeleteAddress")]
         [HttpDelete]
         [MapToApiVersion("1.0")]
         [MapToApiVersion("1.1")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseAddressResourseModel))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         public async Task<IActionResult> UpdateAddressAsync_v1_x(long userAddressId)
         {
-            if (userAddressId < 0)
+            if (userAddressId > 0)
+            {
+            }
+            else
             {
                 return this.BadRequest("Please provide valid User Address Id.");
             }
@@ -181,7 +188,7 @@ namespace WinReactApp.ManageUsers.Controllers
 
             await this._context.SaveChangesAsync();
 
-            return this.Ok("Address deleted successfully");
+            return this.Ok(new ResponseAddressResourseModel { UserAddressId = userAddress.UserAddressId, Message = "Address deleted successfully" });
         }
 
         #endregion Manage Address
