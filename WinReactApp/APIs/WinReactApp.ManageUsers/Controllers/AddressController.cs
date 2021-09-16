@@ -60,6 +60,71 @@ namespace WinReactApp.ManageUsers.Controllers
 
         #region Manage Address
 
+        [Route("GetAllAddresses")]
+        [HttpGet]
+        [MapToApiVersion("1.0")]
+        [MapToApiVersion("1.1")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<UserAddress>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationResult))]
+        public async Task<IActionResult> GetAllAddressesAsync_v1_x()
+        {
+            List<UserAddress> userAddresses = new List<UserAddress>();
+
+            userAddresses = await this._context.UserAddresses.Where(x => x.IsActive == true).ToListAsync();
+
+            return this.Ok(userAddresses);
+        }
+
+        [Route("GetAddressesForUser")]
+        [HttpGet]
+        [MapToApiVersion("1.0")]
+        [MapToApiVersion("1.1")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<UserAddress>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        public async Task<IActionResult> GetAddressesForUserAsync_v1_x(long userId)
+        {
+            if (userId < 0)
+            {
+                return this.BadRequest("Please provide User Id.");
+            }
+
+            var userAddresses = await this._context.UserAddresses.Where(x => x.UserId == userId && x.IsActive == true).ToListAsync();
+
+            if (userAddresses != null && userAddresses.Count > 0)
+            {
+                return this.Ok(userAddresses);
+            }
+            else
+            {
+                return this.NoContent();
+            }
+        }
+
+        [Route("GetAddresses")]
+        [HttpGet]
+        [MapToApiVersion("1.0")]
+        [MapToApiVersion("1.1")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<UserAddress>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        public async Task<IActionResult> GetAddressesAsync_v1_x(long userAddressId)
+        {
+            if (userAddressId < 0)
+            {
+                return this.BadRequest("Please provide User Address Id.");
+            }
+
+            var userAddresses = await this._context.UserAddresses.Where(x => x.UserAddressId == userAddressId && x.IsActive == true).ToListAsync();
+
+            if (userAddresses != null && userAddresses.Count > 0)
+            {
+                return this.Ok(userAddresses);
+            }
+            else
+            {
+                return this.NoContent();
+            }
+        }
+
         [Route("AddAddress")]
         [HttpPost]
         [MapToApiVersion("1.0")]
@@ -92,31 +157,6 @@ namespace WinReactApp.ManageUsers.Controllers
             long userAddressId = userAddress.UserAddressId;
 
             return this.Ok(new ResponseAddressResourseModel { UserAddressId = userAddressId, Message = "Address added successfully" });
-        }
-
-        [Route("GetAddresses")]
-        [HttpGet]
-        [MapToApiVersion("1.0")]
-        [MapToApiVersion("1.1")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<UserAddress>))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        public async Task<IActionResult> GetAddressesAsync_v1_x(long userId)
-        {
-            if (userId < 0)
-            {
-                return this.BadRequest("Please provide User Id.");
-            }
-
-            var userAddresses = await this._context.UserAddresses.Where(x => x.UserId == userId && x.IsActive == true).ToListAsync();
-
-            if (userAddresses != null && userAddresses.Count > 0)
-            {
-                return this.Ok(userAddresses);
-            }
-            else
-            {
-                return this.NoContent();
-            }
         }
 
         [Route("UpdateAddress")]

@@ -4,15 +4,6 @@
 @inject TokenAuthenticationStateProvider _authenticationStateProvider
 
 @attribute [Authorize]
-<AuthorizeView>
-    <Authorized>
-        <h1>Hello, @context.User.Identity.Name !</h1>
-        <p>Welcome to your new app.</p>
-    </Authorized>
-    <NotAuthorized>
-        <p>Not Authrized</p>
-    </NotAuthorized>
-</AuthorizeView>
 
 @code {
     protected override async Task OnAfterRenderAsync(bool firstRender)
