@@ -19,7 +19,7 @@ namespace WinReactApp.ManageUsers.Models
         {
         }
 
-        public virtual DbSet<AddressType> AddressTypes { get; set; }
+        public virtual DbSet<AddressTypes> AddressTypes { get; set; }
         public virtual DbSet<Country> Countries { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserAddress> UserAddresses { get; set; }
@@ -35,11 +35,11 @@ namespace WinReactApp.ManageUsers.Models
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 
-            modelBuilder.Entity<AddressType>(entity =>
+            modelBuilder.Entity<AddressTypes>(entity =>
             {
                 entity.ToTable("AddressType");
 
-                entity.Property(e => e.AddressType1)
+                entity.Property(e => e.AddressType)
                     .HasMaxLength(250)
                     .HasColumnName("AddressType");
             });

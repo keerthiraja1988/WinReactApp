@@ -261,11 +261,11 @@ namespace WinReactApp.ManageUsers.Controllers
         [HttpGet]
         [MapToApiVersion("1.0")]
         [MapToApiVersion("1.1")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<AddressType>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<AddressTypes>))]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> GetAddressTypesAsync_v1_x()
         {
-            List<AddressType> addressTypes = new List<AddressType>();
+            List<AddressTypes> addressTypes = new List<AddressTypes>();
 
             addressTypes = await this._context.AddressTypes.Where(x => x.IsActive == true).ToListAsync();
 
