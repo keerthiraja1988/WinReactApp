@@ -32,9 +32,6 @@
         [Inject]
         protected TokenAuthenticationStateProvider _authenticationStateProvider { get; set; }
 
-        [Inject]
-        protected TokenAuthenticationStateProvider _authStateProvider { get; set; }
-
         protected DotNetObjectReference<SharedService> _sharedServiceObjRef;
         protected LoginUserResourseModel LoginUserRM = new LoginUserResourseModel();
         protected ServerValidator serverValidator;
@@ -67,7 +64,7 @@
 
                 AuthTokenResourceModel authTokenResourceModel = System.Text.Json.JsonSerializer.Deserialize<AuthTokenResourceModel>(body);
 
-                await _authStateProvider.SetTokenAsync(authTokenResourceModel.AuthToken, authTokenResourceModel, authTokenResourceModel.ExpireOn);
+                await _authenticationStateProvider.SetTokenAsync(authTokenResourceModel.AuthToken, authTokenResourceModel, authTokenResourceModel.ExpireOn);
 
                 this._sharedServiceObjRef = DotNetObjectReference.Create(_sharedService);
                 _navigationManager.NavigateTo("");

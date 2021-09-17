@@ -9,5 +9,5 @@
   // - Development
   // - UAT
   // - Production
-  "ASPNETCORE_ENVIRONMENT": "Debug"
+  "ASPNETCORE_ENVIRONMENT": "Development"
 }

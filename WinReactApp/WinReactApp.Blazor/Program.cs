@@ -40,9 +40,15 @@ namespace WinReactApp.Blazor
             {
                 client.BaseAddress = new Uri(builder.Configuration["API_URLS:WinReactApp.UserAuth"]);
             });
+
             builder.Services.AddHttpClient<AuthValidationClient>(client =>
             {
                 client.BaseAddress = new Uri(builder.Configuration["API_URLS:WinReactApp.UserAuth"]);
+            });
+
+            builder.Services.AddHttpClient<ManageUserClient>(client =>
+            {
+                client.BaseAddress = new Uri(builder.Configuration["API_URLS:WinReactApp.ManageUsers"]);
             });
 
             builder.Services.AddOptions();

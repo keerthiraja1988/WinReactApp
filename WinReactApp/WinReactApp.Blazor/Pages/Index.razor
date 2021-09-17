@@ -5,6 +5,43 @@
 
 @attribute [Authorize]
 
+@inherits IndexBase
+
+<h3 class="p-3 text-center">User Address Details</h3>
+<table class="table table-hover table-bordered">
+    <thead>
+        <tr>
+            <th>User Address Id</th>
+            <th>User Id</th>
+            <th>Role</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @{
+            if (UserAddresses.Count > 0)
+            {
+                foreach (var userAddresses in UserAddresses)
+                {
+                    <tr>
+                        <td>@userAddresses.UserAddressId</td>
+                        <td>@userAddresses.UserId</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="12">No items to display</td>
+                   
+                </tr>
+            }
+        }
+
+
+    </tbody>
+</table>
+
 @code {
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -12,6 +49,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await this.GetAllAddressesAsync();
         await this._jsRuntime.InvokeVoidAsync("sharedController.hideLoadingIndicator");
     }
 }

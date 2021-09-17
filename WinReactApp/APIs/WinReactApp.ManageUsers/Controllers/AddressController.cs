@@ -232,5 +232,53 @@ namespace WinReactApp.ManageUsers.Controllers
         }
 
         #endregion Manage Address
+
+        #region Address Types
+
+        [Route("GetCountries")]
+        [HttpGet]
+        [MapToApiVersion("1.0")]
+        [MapToApiVersion("1.1")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Country>))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> GetCountriesAsync_v1_x()
+        {
+            List<Country> countries = new List<Country>();
+
+            countries = await this._context.Countries.Where(x => x.IsActive == true).ToListAsync();
+
+            if (countries != null && countries.Count > 0)
+            {
+                return this.Ok(countries);
+            }
+            else
+            {
+                return this.NoContent();
+            }
+        }
+
+        [Route("GetAddressTypes")]
+        [HttpGet]
+        [MapToApiVersion("1.0")]
+        [MapToApiVersion("1.1")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<AddressType>))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> GetAddressTypesAsync_v1_x()
+        {
+            List<AddressType> addressTypes = new List<AddressType>();
+
+            addressTypes = await this._context.AddressTypes.Where(x => x.IsActive == true).ToListAsync();
+
+            if (addressTypes != null && addressTypes.Count > 0)
+            {
+                return this.Ok(addressTypes);
+            }
+            else
+            {
+                return this.NoContent();
+            }
+        }
+
+        #endregion Address Types
     }
 }

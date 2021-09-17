@@ -11,6 +11,8 @@ namespace WinReactApp.ResourceModel.ManageUsers
 
     public class GetAddressResourseModel
     {
+        public long UserAddressId { get; set; }
+
         public long UserId { get; set; }
 
         public int AddressTypeId { get; set; }
